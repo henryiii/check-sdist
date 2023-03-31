@@ -1,0 +1,11 @@
+.coverage
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.tox/
+.venv/
+dist/
+tests/__pycache__/
+tests/any/__pycache__/
+anything.egg-info/
+__pycache__/

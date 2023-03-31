@@ -1,0 +1,6 @@
+.github
+.pre-commit-config.yaml
+.readthedocs.yml
+noxfile.py
+.coverage
+codecov.yml

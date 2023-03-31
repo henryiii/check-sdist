@@ -4,21 +4,9 @@ import contextlib
 from collections.abc import Generator, Sequence
 from pathlib import Path
 
-__all__ = ["inject_junk_files", "inject_files", "JUNK_FILES"]
+from .resources import resources
 
-JUNK_FILES = """
-.coverage
-.mypy_cache/
-.pytest_cache/
-.ruff_cache/
-.tox/
-.venv/
-dist/
-tests/__pycache__/
-tests/any/__pycache__/
-anything.egg-info/
-__pycache__/
-""".strip().splitlines()
+__all__ = ["inject_junk_files", "inject_files"]
 
 
 @contextlib.contextmanager
@@ -58,5 +46,7 @@ def inject_files(source_dir: Path, files: Sequence[str]) -> Generator[None, None
 @contextlib.contextmanager
 def inject_junk_files(source_dir: Path) -> Generator[None, None, None]:
     """This context manager will inject common junk files into a directory, cleaned afterwards."""
-    with inject_files(source_dir, JUNK_FILES):
+    with resources.joinpath("junk-paths.txt").open("r", encoding="utf-8") as f:
+        junk_files = [ln.strip() for ln in f]
+    with inject_files(source_dir, junk_files):
         yield

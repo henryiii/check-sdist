@@ -29,6 +29,7 @@ dependencies = [
   "build",
   "pathspec",
   "tomli; python_version<'3.11'",
+  "importlib-resources; python_version<'3.9'",
 ]
 
 [project.optional-dependencies]

@@ -9,6 +9,7 @@ import pathspec
 from ._compat import tomllib
 from .git import git_files
 from .inject import inject_junk_files
+from .resources import resources
 from .sdist import sdist_files
 
 
@@ -38,16 +39,8 @@ def compare(source_dir: Path, isolated: bool, verbose: bool = False) -> int:
     default_ignore = config.get("default-ignore", True)
 
     if default_ignore:
-        git_only_patterns.extend(
-            [
-                ".github",
-                ".pre-commit-config.yaml",
-                ".readthedocs.yml",
-                "noxfile.py",
-                ".coverage",
-                "codecov.yml",
-            ]
-        )
+        with resources.joinpath("default-ignore.txt").open("r", encoding="utf-8") as f:
+            git_only_patterns.extend(f.read().splitlines())
 
     sdist_spec = pathspec.GitIgnoreSpec.from_lines(sdist_only_patterns)
     git_spec = pathspec.GitIgnoreSpec.from_lines(git_only_patterns)
