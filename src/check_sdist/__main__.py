@@ -12,7 +12,7 @@ from .inject import inject_junk_files
 from .sdist import sdist_files
 
 
-def compare(source_dir: Path, isolated: bool) -> int:
+def compare(source_dir: Path, isolated: bool, verbose: bool = False) -> int:
     """
     Compare the files in the SDist with the files tracked by git.
 
@@ -42,13 +42,18 @@ def compare(source_dir: Path, isolated: bool) -> int:
     sdist_only: frozenset[str] = frozenset(sdist_spec.match_files(sdist - git))  # type: ignore[arg-type]
     git_only: frozenset[str] = frozenset(git_spec.match_files(git - sdist))  # type: ignore[arg-type]
 
-    if sdist_only != git_only:
+    if verbose:
+        print("SDist contents:")
+        print(*(f"  {x}" for x in sorted(sdist)), sep="\n")
+
+    if sdist_only or git_only:
         print("SDist does not match git")
         print("SDist only:")
         print(*(f"  {x}" for x in sorted(sdist_only)), sep="\n")
         print("Git only:")
         print(*(f"  {x}" for x in sorted(git_only)), sep="\n  ")
         return bool(sdist_only) + 2 * bool(git_only)
+
     print("SDist matches git")
     return 0
 
@@ -72,13 +77,19 @@ def main() -> None:
         action="store_true",
         help="Temporarily inject common junk files into the source directory",
     )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        help="Print out SDist contents too",
+    )
     args = parser.parse_args()
 
     with contextlib.ExitStack() as stack:
         if args.inject_junk:
             stack.enter_context(inject_junk_files(args.source_dir))
 
-    raise SystemExit(compare(args.source_dir, not args.no_isolation))
+    raise SystemExit(compare(args.source_dir, not args.no_isolation, args.verbose))
 
 
 if __name__ == "__main__":
