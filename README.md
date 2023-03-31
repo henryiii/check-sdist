@@ -16,7 +16,7 @@
 To run:
 
 ```console
-pipx run check-sdist
+$ pipx run check-sdist
 ```
 
 You can add `--no-isolation` to disable build isolation (faster, but must
@@ -37,6 +37,7 @@ To use the pre-commit integration, use this in your `.pre-commit-config.yaml`:
   rev: v0.1.0
   hooks:
     - id: check-sdist
+      args: [--inject-junk]
       additional_dependencies: [] # list your build deps here
 ```
 
@@ -47,4 +48,17 @@ Or, slower, but doesn't require build dependency listing:
   rev: v0.1.0
   hooks:
     - id: check-sdist-isolated
+      args: [--inject-junk]
 ```
+
+To configure, these options are provided for your pyproject.toml file:
+
+```toml
+[tool.check-sdist]
+sdist-only = []
+git-only = []
+default-ignore = true
+```
+
+You can add .gitignore style lines here, and you can turn off the default ignore
+list, which adds some default `git-only` files.

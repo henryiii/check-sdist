@@ -9,3 +9,12 @@ tests/__pycache__/
 tests/any/__pycache__/
 anything.egg-info/
 __pycache__/
+.DS_Store
+.DS_Store?
+._thing
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+editor.swp
+editor~

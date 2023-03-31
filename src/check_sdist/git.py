@@ -10,7 +10,11 @@ def git_files(source_dir: Path) -> frozenset[str]:
     cmd = ["git", "ls-files", "--cached"]
     return frozenset(
         subprocess.run(
-            cmd, cwd=source_dir, text=True, capture_output=True, check=True
+            cmd,
+            cwd=source_dir,
+            text=True,
+            capture_output=True,
+            check=True,
         ).stdout.splitlines()
     )
 
