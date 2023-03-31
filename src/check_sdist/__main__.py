@@ -8,6 +8,7 @@ import pathspec
 
 from ._compat import tomllib
 from .git import git_files
+from .inject import inject_junk_files
 from .sdist import sdist_files
 
 
@@ -62,13 +63,22 @@ def main() -> None:
         help="The source directory to check (default: current directory)",
     )
     parser.add_argument(
-        "--no-isolated",
+        "--no-isolation",
         action="store_true",
         help="Do not build the SDist in an isolated environment",
     )
+    parser.add_argument(
+        "--inject-junk",
+        action="store_true",
+        help="Temporarily inject common junk files into the source directory",
+    )
     args = parser.parse_args()
 
-    raise SystemExit(compare(args.source_dir, not args.no_isolated))
+    with contextlib.ExitStack() as stack:
+        if args.inject_junk:
+            stack.enter_context(inject_junk_files(args.source_dir))
+
+    raise SystemExit(compare(args.source_dir, not args.no_isolation))
 
 
 if __name__ == "__main__":

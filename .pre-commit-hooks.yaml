@@ -1,0 +1,17 @@
+- id: check-sdist
+  name: check-sdist
+  description: Check the contents of the SDist
+  entry: check-sdist --no-isolation
+  language: python
+  language_version: python3
+  pass_filenames: false
+  always_run: true
+  args: [--inject-junk]
+- id: check-sdist-isolated
+  name: check-sdist
+  description: Check the contents of the SDist (isolated build)
+  entry: check-sdist
+  language: python
+  language_version: python3
+  pass_filenames: false
+  always_run: true
