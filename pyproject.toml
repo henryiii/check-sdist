@@ -41,13 +41,6 @@ dev = [
   "pytest >=6",
   "pytest-cov >=3",
 ]
-docs = [
-  "sphinx>=4.0",
-  "myst_parser>=0.13",
-  "sphinx-book-theme>=0.1.0",
-  "sphinx_copybutton",
-  "furo",
-]
 
 [project.urls]
 Homepage = "https://github.com/henryiii/check-sdist"
@@ -89,7 +82,7 @@ warn_unreachable = true
 [tool.ruff]
 select = [
   "E", "F", "W", # flake8
-  "B", "B904",   # flake8-bugbear
+  "B",           # flake8-bugbear
   "I",           # isort
   "ARG",         # flake8-unused-arguments
   "C4",          # flake8-comprehensions
@@ -108,13 +101,10 @@ select = [
   "UP",          # pyupgrade
   "YTT",         # flake8-2020
   "EXE",         # flake8-executable
-  "NPY",         # NumPy specific rules
-  "PD",          # pandas-vet
 ]
 extend-ignore = [
   "PLR",    # Design related pylint codes
   "E501",   # Line too long
-  "PT004",  # Use underscore for non-returning fixture (use usefixture instead)
 ]
 target-version = "py38"
 src = ["src"]
