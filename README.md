@@ -21,7 +21,7 @@ pipx run check-sdist
 
 You can add `--no-isolation` to disable build isolation (faster, but must
 preinstall build deps), `--source-dir` to select a different source dir to
-check, and ``--inject-junk` to temporarily inject some common junk files while
+check, and `--inject-junk` to temporarily inject some common junk files while
 running.
 
 To use the development version:

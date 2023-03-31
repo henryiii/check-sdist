@@ -35,23 +35,40 @@ def compare(source_dir: Path, isolated: bool, verbose: bool = False) -> int:
 
     sdist_only_patterns = config.get("sdist-only", [])
     git_only_patterns = config.get("git-only", [])
+    default_ignore = config.get("default-ignore", True)
+
+    if default_ignore:
+        git_only_patterns.extend(
+            [
+                ".github",
+                ".pre-commit-config.yaml",
+                ".readthedocs.yml",
+                "noxfile.py",
+                ".coverage",
+                "codecov.yml",
+            ]
+        )
 
     sdist_spec = pathspec.GitIgnoreSpec.from_lines(sdist_only_patterns)
     git_spec = pathspec.GitIgnoreSpec.from_lines(git_only_patterns)
 
-    sdist_only: frozenset[str] = frozenset(sdist_spec.match_files(sdist - git))  # type: ignore[arg-type]
-    git_only: frozenset[str] = frozenset(git_spec.match_files(git - sdist))  # type: ignore[arg-type]
+    sdist_only = frozenset(p for p in sdist - git if not sdist_spec.match_file(p))
+    git_only = frozenset(p for p in git - sdist if not git_spec.match_file(p))
 
     if verbose:
         print("SDist contents:")
         print(*(f"  {x}" for x in sorted(sdist)), sep="\n")
+        print()
 
     if sdist_only or git_only:
         print("SDist does not match git")
+        print()
         print("SDist only:")
         print(*(f"  {x}" for x in sorted(sdist_only)), sep="\n")
+        print()
         print("Git only:")
-        print(*(f"  {x}" for x in sorted(git_only)), sep="\n  ")
+        print(*(f"  {x}" for x in sorted(git_only)), sep="\n")
+        print()
         return bool(sdist_only) + 2 * bool(git_only)
 
     print("SDist matches git")

@@ -15,9 +15,8 @@ JUNK_FILES = """
 .venv/
 dist/
 tests/__pycache__/
-tests/{any}/__pycache__/
-{any}.dist-info/
-{any}.egg-info/
+tests/any/__pycache__/
+anything.egg-info/
 __pycache__/
 """.strip().splitlines()
 
@@ -59,6 +58,5 @@ def inject_files(source_dir: Path, files: Sequence[str]) -> Generator[None, None
 @contextlib.contextmanager
 def inject_junk_files(source_dir: Path) -> Generator[None, None, None]:
     """This context manager will inject common junk files into a directory, cleaned afterwards."""
-    files = [x.format(version="1.2.3", any="any") for x in JUNK_FILES]
-    with inject_files(source_dir, files):
+    with inject_files(source_dir, JUNK_FILES):
         yield
