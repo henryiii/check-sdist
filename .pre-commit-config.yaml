@@ -52,6 +52,14 @@ repos:
         args: []
         additional_dependencies: ["tomli", "pathspec", "importlib-resources"]
 
+  - repo: https://github.com/henryiii/check-sdist
+    rev: "v0.1.0"
+    hooks:
+      - id: check-sdist
+        args: [--inject-junk]
+        additional_dependencies:
+          - hatchling
+
   - repo: https://github.com/codespell-project/codespell
     rev: v2.2.4
     hooks:

@@ -1,5 +1,5 @@
 - id: check-sdist
-  name: check-sdist
+  name: check sdist
   description: Check the contents of the SDist
   entry: check-sdist --no-isolation
   language: python
@@ -8,7 +8,7 @@
   always_run: true
   args: [--inject-junk]
 - id: check-sdist-isolated
-  name: check-sdist
+  name: check sdist (isolated)
   description: Check the contents of the SDist (isolated build)
   entry: check-sdist
   language: python
