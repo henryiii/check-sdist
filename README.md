@@ -20,17 +20,17 @@ $ pipx run check-sdist
 ```
 
 You can add `--no-isolation` to disable build isolation (faster, but must
-preinstall build deps), `--source-dir` to select a different source dir to
-check, and `--inject-junk` to temporarily inject some common junk files while
-running.
+preinstall build dependencies), `--source-dir` to select a different source
+directory to check, and `--inject-junk` to temporarily inject some common junk
+files while running.
 
-To use the development version:
+If you need the latest development version:
 
 ```console
 $ pipx run --spec git+https://github.com/henryiii/check-sdist check-sdist
 ```
 
-To use the pre-commit integration, use this in your `.pre-commit-config.yaml`:
+To use the pre-commit integration, put this in your `.pre-commit-config.yaml`:
 
 ```yaml
 - repo: https://github.com/henryiii/check-sdist
@@ -41,7 +41,9 @@ To use the pre-commit integration, use this in your `.pre-commit-config.yaml`:
       additional_dependencies: [] # list your build deps here
 ```
 
-Or, slower, but doesn't require build dependency listing:
+This requires your build dependencies, but in doing so, it can cache the
+environment, making it quite fast. If you don't mind slower runs and don't want
+to require build dependency listing:
 
 ```yaml
 - repo: https://github.com/henryiii/check-sdist
@@ -51,7 +53,7 @@ Or, slower, but doesn't require build dependency listing:
       args: [--inject-junk]
 ```
 
-To configure, these options are provided for your pyproject.toml file:
+To configure, these options are supported in your `pyproject.toml` file:
 
 ```toml
 [tool.check-sdist]
@@ -60,5 +62,5 @@ git-only = []
 default-ignore = true
 ```
 
-You can add .gitignore style lines here, and you can turn off the default ignore
-list, which adds some default `git-only` files.
+You can add `.gitignore` style lines here, and you can turn off the default
+ignore list, which adds some default git-only files.
