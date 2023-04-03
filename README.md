@@ -13,6 +13,19 @@
 
 <!-- prettier-ignore-end -->
 
+Have you ever shipped broken SDists with missing files or possibly dirty SDists
+with files that shouldn't have been there? Have you noticed that standards
+compliant tools aren't making the same SDist that `flit build` is? Is hatchling
+adding `.DSStore` files when you ship from your macOS? No matter what
+build-backend you use, check-sdist can help!
+
+Check-sdist builds an SDist and compares the contents with your Git repository
+contents. It can even temporarily inject common junk files (like pycache files
+or OS specific files) and help verify that those aren't getting bundled into
+your SDist. If you are getting files you didn't expect or missing files you did
+expect, consult your build backend's docs to see how to include or exclude
+files.
+
 To run:
 
 ```console
@@ -30,7 +43,10 @@ If you need the latest development version:
 $ pipx run --spec git+https://github.com/henryiii/check-sdist check-sdist
 ```
 
-To use the pre-commit integration, put this in your `.pre-commit-config.yaml`:
+### pre-commit integration
+
+To use the [pre-commit](https://pre-commit.com) integration, put this in your
+`.pre-commit-config.yaml`:
 
 ```yaml
 - repo: https://github.com/henryiii/check-sdist
@@ -53,6 +69,8 @@ to require build dependency listing:
       args: [--inject-junk]
 ```
 
+### Configuration
+
 To configure, these options are supported in your `pyproject.toml` file:
 
 ```toml
@@ -64,3 +82,11 @@ default-ignore = true
 
 You can add `.gitignore` style lines here, and you can turn off the default
 ignore list, which adds some default git-only files.
+
+### See Also
+
+- [check-manifest](https://github.com/mgedmin/check-manifest): A (currently)
+  setuptools specific checker that can suggest possible ways to include/exclude
+  files.
+- [scikit-hep developer pages](https://scikit-hep.org/developer): Guidelines on
+  which this package was designed.
