@@ -26,6 +26,8 @@ your SDist. If you are getting files you didn't expect or missing files you did
 expect, consult your build backend's docs to see how to include or exclude
 files.
 
+### Quick start
+
 To run:
 
 ```console
@@ -43,7 +45,7 @@ If you need the latest development version:
 $ pipx run --spec git+https://github.com/henryiii/check-sdist check-sdist
 ```
 
-### pre-commit integration
+### Pre-commit integration
 
 To use the [pre-commit](https://pre-commit.com) integration, put this in your
 `.pre-commit-config.yaml`:
@@ -83,7 +85,7 @@ default-ignore = true
 You can add `.gitignore` style lines here, and you can turn off the default
 ignore list, which adds some default git-only files.
 
-### See Also
+### See also
 
 - [check-manifest](https://github.com/mgedmin/check-manifest): A (currently)
   setuptools specific checker that can suggest possible ways to include/exclude
