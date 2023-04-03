@@ -17,9 +17,9 @@ Python on your system, skipping ones that are not installed. You can also run
 specific jobs:
 
 ```console
-$ nox -s lint  # Lint only
+$ nox -s lint   # Lint only
+$ nox -s pylint # Slower linting via PyLint
 $ nox -s tests  # Run tests
-$ nox -s docs -- serve  # Build and serve the docs
 $ nox -s build  # Make an SDist and wheel
 ```
 
@@ -72,20 +72,6 @@ Use pytest-cov to generate coverage reports:
 
 ```bash
 pytest --cov=check-sdist
-```
-
-# Building docs
-
-You can build the docs using:
-
-```bash
-nox -s docs
-```
-
-You can see a preview with:
-
-```bash
-nox -s docs -- serve
 ```
 
 # Pre-commit
