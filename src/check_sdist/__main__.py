@@ -13,7 +13,7 @@ from .resources import resources
 from .sdist import sdist_files
 
 
-def compare(source_dir: Path, isolated: bool, verbose: bool = False) -> int:
+def compare(source_dir: Path, *, isolated: bool, verbose: bool = False) -> int:
     """
     Compare the files in the SDist with the files tracked by git.
 
@@ -41,6 +41,7 @@ def compare(source_dir: Path, isolated: bool, verbose: bool = False) -> int:
     if default_ignore:
         with resources.joinpath("default-ignore.txt").open("r", encoding="utf-8") as f:
             git_only_patterns.extend(f.read().splitlines())
+        sdist_only_patterns.extend("*.dist-info")
 
     sdist_spec = pathspec.GitIgnoreSpec.from_lines(sdist_only_patterns)
     git_spec = pathspec.GitIgnoreSpec.from_lines(git_only_patterns)
@@ -99,7 +100,9 @@ def main() -> None:
         if args.inject_junk:
             stack.enter_context(inject_junk_files(args.source_dir))
 
-    raise SystemExit(compare(args.source_dir, not args.no_isolation, args.verbose))
+    raise SystemExit(
+        compare(args.source_dir, isolated=not args.no_isolation, verbose=args.verbose)
+    )
 
 
 if __name__ == "__main__":

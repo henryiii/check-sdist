@@ -4,3 +4,4 @@
 noxfile.py
 .coverage
 codecov.yml
+*.dist-info
