@@ -48,9 +48,10 @@ repos:
     rev: "v1.1.1"
     hooks:
       - id: mypy
-        files: src
+        files: src|tests
         args: []
-        additional_dependencies: ["tomli", "pathspec", "importlib-resources"]
+        additional_dependencies:
+          ["tomli", "pathspec", "importlib-resources", "pytest"]
 
   - repo: https://github.com/henryiii/check-sdist
     rev: "v0.1.0"

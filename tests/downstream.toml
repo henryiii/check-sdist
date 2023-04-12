@@ -1,0 +1,23 @@
+[[packages]]
+repo = "pypa/build"
+ref = "0.10.0"
+fail = 2
+
+[[packages]]
+repo = "FriedrichFroebel/pelican-youtube-thumbnails"
+ref = "0.3.2"
+fail = 2
+
+[[packages]]
+repo = "pypa/setuptools"
+ref = "v67.6.1"
+fail = 2
+
+[[packages]]
+repo = "scikit-build/scikit-build-core"
+ref = "v0.2.1"
+
+[[packages]]
+repo = "pybind/pybind11"
+ref = "v2.10.3"
+fail = 2

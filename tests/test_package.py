@@ -16,7 +16,7 @@ def get_all_files(path: Path) -> frozenset[str]:
 
 def test_self_dir():
     start = get_all_files(DIR.parent)
-    assert compare(DIR.parent, True) == 0
+    assert compare(DIR.parent, isolated=True) == 0
     end = get_all_files(DIR.parent)
     assert start == end
 
@@ -24,6 +24,6 @@ def test_self_dir():
 def test_self_dir_injected():
     start = get_all_files(DIR.parent)
     with inject_junk_files(DIR.parent):
-        assert compare(DIR.parent, True) == 0
+        assert compare(DIR.parent, isolated=True) == 0
     end = get_all_files(DIR.parent)
     assert start == end

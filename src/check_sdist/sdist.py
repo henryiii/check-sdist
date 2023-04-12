@@ -23,7 +23,9 @@ def sdist_files(source_dir: Path, isolated: bool) -> frozenset[str]:
             if len(prefixes) != 1:
                 msg = f"malformted SDist, contains multiple packages {prefixes}"
                 raise AssertionError(msg)
-            return frozenset(n.split("/", maxsplit=1)[1] for n in tar.getnames())
+            return frozenset(
+                t.name.split("/", maxsplit=1)[1] for t in tar.getmembers() if t.isfile()
+            )
 
 
 if __name__ == "__main__":
