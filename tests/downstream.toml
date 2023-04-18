@@ -18,6 +18,10 @@ repo = "scikit-build/scikit-build-core"
 ref = "v0.2.1"
 
 [[packages]]
+repo = "scikit-build/scikit-build"
+ref = "0.17.0"
+
+[[packages]]
 repo = "pybind/pybind11"
 ref = "v2.10.3"
 fail = 2
