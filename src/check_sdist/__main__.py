@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+from collections.abc import Sequence
 from pathlib import Path
 
 import pathspec
 
+from . import __version__
 from ._compat import tomllib
 from .git import git_files
 from .inject import inject_junk_files
@@ -69,9 +71,12 @@ def compare(source_dir: Path, *, isolated: bool, verbose: bool = False) -> int:
     return 0
 
 
-def main() -> None:
+def main(sys_args: Sequence[str] | None = None, /) -> None:
     """Parse the command line arguments and call compare()."""
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(prog=None if sys_args is None else "check-sdist")
+    parser.add_argument(
+        "--version", action="version", version=f"%(prog)s {__version__}"
+    )
     parser.add_argument(
         "--source-dir",
         type=Path,
@@ -94,7 +99,7 @@ def main() -> None:
         action="store_true",
         help="Print out SDist contents too",
     )
-    args = parser.parse_args()
+    args = parser.parse_args(sys_args)
 
     with contextlib.ExitStack() as stack:
         if args.inject_junk:
