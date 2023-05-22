@@ -68,7 +68,7 @@ jobs:
         run: python -m pytest -ra --cov=check-sdist
 
       - name: Upload coverage report
-        uses: codecov/codecov-action@v3.1.2
+        uses: codecov/codecov-action@v3.1.4
 
   dist:
     name: Distribution build
