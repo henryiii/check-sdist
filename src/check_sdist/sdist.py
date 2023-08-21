@@ -25,6 +25,7 @@ def _sdist_files_build(source_dir: Path, isolated: bool):
         cmd = [sys.executable, "-m", "build", "--sdist", "--outdir", outdir]
         return _run(source_dir, isolated, cmd, outdir)
 
+
 def _sdist_files_flit(source_dir: Path, isolated: bool):
     """Create subprocess command for flit."""
     cmd = [sys.executable, "-m", "flit", "build"]

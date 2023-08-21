@@ -15,7 +15,9 @@ from .resources import resources
 from .sdist import sdist_files
 
 
-def compare(source_dir: Path, *, isolated: bool, verbose: bool = False, buildsystem: str) -> int:
+def compare(
+    source_dir: Path, *, isolated: bool, verbose: bool = False, buildsystem: str
+) -> int:
     """
     Compare the files in the SDist with the files tracked by git.
 
@@ -113,7 +115,12 @@ def main(sys_args: Sequence[str] | None = None, /) -> None:
             stack.enter_context(inject_junk_files(args.source_dir))
 
     raise SystemExit(
-        compare(args.source_dir, isolated=not args.no_isolation, verbose=args.verbose, buildsystem=args.buildsystem)
+        compare(
+            args.source_dir,
+            isolated=not args.no_isolation,
+            verbose=args.verbose,
+            buildsystem=args.buildsystem,
+        )
     )
 
 
