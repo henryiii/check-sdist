@@ -15,7 +15,7 @@ from .resources import resources
 from .sdist import sdist_files
 
 
-def compare(source_dir: Path, *, isolated: bool, verbose: bool = False) -> int:
+def compare(source_dir: Path, *, isolated: bool, verbose: bool = False, buildsystem: str) -> int:
     """
     Compare the files in the SDist with the files tracked by git.
 
@@ -27,7 +27,7 @@ def compare(source_dir: Path, *, isolated: bool, verbose: bool = False) -> int:
     conditions are true.
     """
 
-    sdist = sdist_files(source_dir, isolated) - {"PKG-INFO"}
+    sdist = sdist_files(source_dir, isolated, buildsystem) - {"PKG-INFO"}
     git = git_files(source_dir)
 
     config = {}
@@ -99,6 +99,13 @@ def main(sys_args: Sequence[str] | None = None, /) -> None:
         action="store_true",
         help="Print out SDist contents too",
     )
+    parser.add_argument(
+        "-b",
+        "--buildsystem",
+        type=str,
+        default="build",
+        help="Build system to build SDist.",
+    )
     args = parser.parse_args(sys_args)
 
     with contextlib.ExitStack() as stack:
@@ -106,7 +113,7 @@ def main(sys_args: Sequence[str] | None = None, /) -> None:
             stack.enter_context(inject_junk_files(args.source_dir))
 
     raise SystemExit(
-        compare(args.source_dir, isolated=not args.no_isolation, verbose=args.verbose)
+        compare(args.source_dir, isolated=not args.no_isolation, verbose=args.verbose, buildsystem=args.buildsystem)
     )
 
 
