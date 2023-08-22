@@ -7,6 +7,7 @@
 dist/
 tests/__pycache__/
 tests/any/__pycache__/
+tests/package/anything.egg-info/
 anything.egg-info/
 __pycache__/
 .DS_Store
