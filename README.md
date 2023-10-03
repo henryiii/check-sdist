@@ -52,7 +52,7 @@ To use the [pre-commit](https://pre-commit.com) integration, put this in your
 
 ```yaml
 - repo: https://github.com/henryiii/check-sdist
-  rev: v0.1.0
+  rev: v0.1.3
   hooks:
     - id: check-sdist
       args: [--inject-junk]
@@ -65,7 +65,7 @@ to require build dependency listing:
 
 ```yaml
 - repo: https://github.com/henryiii/check-sdist
-  rev: v0.1.0
+  rev: v0.1.3
   hooks:
     - id: check-sdist-isolated
       args: [--inject-junk]
