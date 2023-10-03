@@ -22,6 +22,7 @@ classifiers = [
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
   "Typing :: Typed",
 ]
 dynamic = ["version"]
@@ -114,7 +115,6 @@ extend-ignore = [
   "PLR",    # Design related pylint codes
   "E501",   # Line too long
 ]
-target-version = "py38"
 src = ["src"]
 unfixable = [
   "F841", # Removes unused variables
@@ -135,3 +135,7 @@ messages_control.disable = [
   "wrong-import-position",
   "invalid-name",
 ]
+
+
+[tool.repo-review]
+ignore = ["PY004", "PC111", "RTD"]
