@@ -24,3 +24,23 @@ def test_packages(repo, ref, fail, tmp_path, monkeypatch):
     )
     package_path = tmp_path / repo.split("/")[1]
     assert compare(package_path, isolated=True) == fail
+
+
+def test_submodules(tmp_path, monkeypatch):
+    repo = "isce-framework/snaphu-py"
+    ref = "v0.2.0"
+    monkeypatch.chdir(tmp_path)
+    subprocess.run(
+        [
+            "git",
+            "clone",
+            f"https://github.com/{repo}",
+            "--branch",
+            ref,
+            "--recurse-submodules",
+        ],
+        check=True,
+    )
+    package_path = tmp_path / repo.split("/")[1]
+    assert compare(package_path, isolated=True, recurse_submodules=False) == 2
+    assert compare(package_path, isolated=True, recurse_submodules=True) == 0

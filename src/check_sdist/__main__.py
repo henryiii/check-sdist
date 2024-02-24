@@ -15,7 +15,13 @@ from .resources import resources
 from .sdist import sdist_files
 
 
-def compare(source_dir: Path, *, isolated: bool, verbose: bool = False) -> int:
+def compare(
+    source_dir: Path,
+    *,
+    isolated: bool,
+    verbose: bool = False,
+    recurse_submodules: bool = False,
+) -> int:
     """
     Compare the files in the SDist with the files tracked by git.
 
@@ -28,7 +34,7 @@ def compare(source_dir: Path, *, isolated: bool, verbose: bool = False) -> int:
     """
 
     sdist = sdist_files(source_dir, isolated) - {"PKG-INFO"}
-    git = git_files(source_dir)
+    git = git_files(source_dir, recurse_submodules=recurse_submodules)
 
     config = {}
     pyproject_toml = source_dir.joinpath("pyproject.toml")
@@ -99,6 +105,11 @@ def main(sys_args: Sequence[str] | None = None, /) -> None:
         action="store_true",
         help="Print out SDist contents too",
     )
+    parser.add_argument(
+        "--recurse-submodules",
+        action="store_true",
+        help="Recursively check the contents of Git submodules",
+    )
     args = parser.parse_args(sys_args)
 
     with contextlib.ExitStack() as stack:
@@ -106,7 +117,12 @@ def main(sys_args: Sequence[str] | None = None, /) -> None:
             stack.enter_context(inject_junk_files(args.source_dir))
 
     raise SystemExit(
-        compare(args.source_dir, isolated=not args.no_isolation, verbose=args.verbose)
+        compare(
+            args.source_dir,
+            isolated=not args.no_isolation,
+            verbose=args.verbose,
+            recurse_submodules=args.recurse_submodules,
+        )
     )
 
 
