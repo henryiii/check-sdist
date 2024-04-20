@@ -4,7 +4,7 @@ import subprocess
 from pathlib import Path
 
 
-def git_files(source_dir: Path, recurse_submodules: bool = False) -> frozenset[str]:
+def git_files(source_dir: Path, recurse_submodules: bool = True) -> frozenset[str]:
     """Return the files that are tracked by git in the source directory."""
 
     cmd = ["git", "ls-files", "--cached"]

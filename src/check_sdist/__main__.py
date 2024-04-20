@@ -20,7 +20,7 @@ def compare(
     *,
     isolated: bool,
     verbose: bool = False,
-    recurse_submodules: bool = False,
+    recurse_submodules: bool = True,
 ) -> int:
     """
     Compare the files in the SDist with the files tracked by git.
@@ -106,9 +106,9 @@ def main(sys_args: Sequence[str] | None = None, /) -> None:
         help="Print out SDist contents too",
     )
     parser.add_argument(
-        "--recurse-submodules",
+        "--no-recurse-submodules",
         action="store_true",
-        help="Recursively check the contents of Git submodules",
+        help="Do not recursively check the contents of Git submodules",
     )
     args = parser.parse_args(sys_args)
 
@@ -121,7 +121,7 @@ def main(sys_args: Sequence[str] | None = None, /) -> None:
             args.source_dir,
             isolated=not args.no_isolation,
             verbose=args.verbose,
-            recurse_submodules=args.recurse_submodules,
+            recurse_submodules=not args.no_recurse_submodules,
         )
     )
 
