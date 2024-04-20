@@ -25,3 +25,7 @@ ref = "0.17.0"
 repo = "pybind/pybind11"
 ref = "v2.10.3"
 fail = 2
+
+[[packages]]
+repo = "isce-framework/snaphu-py"
+ref = "v0.3.0"

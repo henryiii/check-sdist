@@ -27,9 +27,6 @@ def compare(source_dir: Path, *, isolated: bool, verbose: bool = False) -> int:
     conditions are true.
     """
 
-    sdist = sdist_files(source_dir, isolated) - {"PKG-INFO"}
-    git = git_files(source_dir)
-
     config = {}
     pyproject_toml = source_dir.joinpath("pyproject.toml")
     with contextlib.suppress(FileNotFoundError), pyproject_toml.open("rb") as f:
@@ -39,6 +36,10 @@ def compare(source_dir: Path, *, isolated: bool, verbose: bool = False) -> int:
     sdist_only_patterns = config.get("sdist-only", [])
     git_only_patterns = config.get("git-only", [])
     default_ignore = config.get("default-ignore", True)
+    recurse_submodules = config.get("recurse-submodules", True)
+
+    sdist = sdist_files(source_dir, isolated) - {"PKG-INFO"}
+    git = git_files(source_dir, recurse_submodules=recurse_submodules)
 
     if default_ignore:
         with resources.joinpath("default-ignore.txt").open("r", encoding="utf-8") as f:

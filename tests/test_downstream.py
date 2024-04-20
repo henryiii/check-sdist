@@ -19,8 +19,14 @@ with DIR.joinpath("downstream.toml").open("rb") as f:
 )
 def test_packages(repo, ref, fail, tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
-    subprocess.run(
-        ["git", "clone", f"https://github.com/{repo}", "--branch", ref], check=True
-    )
+    cmd = [
+        "git",
+        "clone",
+        f"https://github.com/{repo}",
+        "--branch",
+        ref,
+        "--recurse-submodules",
+    ]
+    subprocess.run(cmd, check=True)
     package_path = tmp_path / repo.split("/")[1]
     assert compare(package_path, isolated=True) == fail

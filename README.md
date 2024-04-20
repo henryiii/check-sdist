@@ -80,10 +80,15 @@ To configure, these options are supported in your `pyproject.toml` file:
 sdist-only = []
 git-only = []
 default-ignore = true
+recurse-submodules = true
 ```
 
 You can add `.gitignore` style lines here, and you can turn off the default
 ignore list, which adds some default git-only files.
+
+By default, check-sdist recursively scans the contents of Git submodules, but
+you can disable this behavior (e.g. to support older Git versions that don't
+have this capability).
 
 ### See also
 
