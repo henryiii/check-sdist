@@ -80,6 +80,7 @@ To configure, these options are supported in your `pyproject.toml` file:
 sdist-only = []
 git-only = []
 default-ignore = true
+recurse-submodules = true
 ```
 
 You can add `.gitignore` style lines here, and you can turn off the default

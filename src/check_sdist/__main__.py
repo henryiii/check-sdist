@@ -20,7 +20,6 @@ def compare(
     *,
     isolated: bool,
     verbose: bool = False,
-    recurse_submodules: bool = True,
 ) -> int:
     """
     Compare the files in the SDist with the files tracked by git.
@@ -33,9 +32,6 @@ def compare(
     conditions are true.
     """
 
-    sdist = sdist_files(source_dir, isolated) - {"PKG-INFO"}
-    git = git_files(source_dir, recurse_submodules=recurse_submodules)
-
     config = {}
     pyproject_toml = source_dir.joinpath("pyproject.toml")
     with contextlib.suppress(FileNotFoundError), pyproject_toml.open("rb") as f:
@@ -45,6 +41,10 @@ def compare(
     sdist_only_patterns = config.get("sdist-only", [])
     git_only_patterns = config.get("git-only", [])
     default_ignore = config.get("default-ignore", True)
+    recurse_submodules = config.get("recurse-submodules", True)
+
+    sdist = sdist_files(source_dir, isolated) - {"PKG-INFO"}
+    git = git_files(source_dir, recurse_submodules=recurse_submodules)
 
     if default_ignore:
         with resources.joinpath("default-ignore.txt").open("r", encoding="utf-8") as f:
@@ -105,11 +105,6 @@ def main(sys_args: Sequence[str] | None = None, /) -> None:
         action="store_true",
         help="Print out SDist contents too",
     )
-    parser.add_argument(
-        "--no-recurse-submodules",
-        action="store_true",
-        help="Do not recursively check the contents of Git submodules",
-    )
     args = parser.parse_args(sys_args)
 
     with contextlib.ExitStack() as stack:
@@ -121,7 +116,6 @@ def main(sys_args: Sequence[str] | None = None, /) -> None:
             args.source_dir,
             isolated=not args.no_isolation,
             verbose=args.verbose,
-            recurse_submodules=not args.no_recurse_submodules,
         )
     )
 
