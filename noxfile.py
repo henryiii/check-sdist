@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import nox
 
-nox.options.sessions = ["lint", "pylint", "tests"]
+nox.needs_version = ">=2024.4.15"
+nox.options.default_venv_backend = "uv|virtualenv"
 
 
 @nox.session
@@ -21,7 +22,7 @@ def pylint(session: nox.Session) -> None:
     """
     # This needs to be installed into the package environment, and is slower
     # than a pre-commit check
-    session.install(".", "pylint")
+    session.install("-e.", "pylint")
     session.run("pylint", "src", *session.posargs)
 
 
@@ -30,7 +31,7 @@ def tests(session: nox.Session) -> None:
     """
     Run the unit and regular tests.
     """
-    session.install(".[test]")
+    session.install("-e.[test]")
     session.run("pytest", *session.posargs)
 
 
@@ -44,7 +45,7 @@ def coverage(session: nox.Session) -> None:
     tests(session)
 
 
-@nox.session
+@nox.session(default=False)
 def build(session: nox.Session) -> None:
     """
     Build an SDist and wheel.

@@ -27,10 +27,10 @@ classifiers = [
 ]
 dynamic = ["version"]
 dependencies = [
-  "build",
+  "build >=1.2",
+  "importlib-resources; python_version<'3.9'",
   "pathspec",
   "tomli; python_version<'3.11'",
-  "importlib-resources; python_version<'3.9'",
 ]
 keywords = ["sdist", "packaging", "lint"]
 
@@ -42,6 +42,9 @@ test = [
 dev = [
   "pytest >=6",
   "pytest-cov >=3",
+]
+uv = [
+  "uv",
 ]
 
 [project.urls]
@@ -89,8 +92,10 @@ disallow_incomplete_defs = true
 
 
 [tool.ruff]
-select = [
-  "E", "F", "W", # flake8
+src = ["src"]
+
+[tool.ruff.lint]
+extend-select = [
   "B",           # flake8-bugbear
   "I",           # isort
   "ARG",         # flake8-unused-arguments
@@ -111,13 +116,10 @@ select = [
   "YTT",         # flake8-2020
   "EXE",         # flake8-executable
 ]
-extend-ignore = [
-  "PLR",    # Design related pylint codes
+ignore = [
+  "PLR09",  # Design related pylint codes
   "E501",   # Line too long
-]
-src = ["src"]
-unfixable = [
-  "F841", # Removes unused variables
+  "ISC001", # Conflicts with formatter
 ]
 flake8-unused-arguments.ignore-variadic-names = true
 isort.required-imports = ["from __future__ import annotations"]

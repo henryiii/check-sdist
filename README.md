@@ -31,13 +31,15 @@ files.
 To run:
 
 ```console
-$ pipx run check-sdist
+$ pipx run check-sdist[uv]
 ```
 
 You can add `--no-isolation` to disable build isolation (faster, but must
 preinstall build dependencies), `--source-dir` to select a different source
 directory to check, and `--inject-junk` to temporarily inject some common junk
-files while running.
+files while running. You can select an installer for build to use with
+`--installer=`, choices are `uv`, `pip`, or `uv|pip`, which will use uv if
+available (the default).
 
 If you need the latest development version:
 
@@ -95,5 +97,5 @@ have this capability).
 - [check-manifest](https://github.com/mgedmin/check-manifest): A (currently)
   setuptools specific checker that can suggest possible ways to include/exclude
   files.
-- [scikit-hep developer pages](https://scikit-hep.org/developer): Guidelines on
-  which this package was designed.
+- [Scientific Python Development Guide](https://learn.scientific-python.org/development/):
+  Guidelines on which this package was designed.

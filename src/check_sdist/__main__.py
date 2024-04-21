@@ -2,8 +2,11 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import importlib.util
+import shutil
 from collections.abc import Sequence
 from pathlib import Path
+from typing import Literal
 
 import pathspec
 
@@ -15,7 +18,34 @@ from .resources import resources
 from .sdist import sdist_files
 
 
-def compare(source_dir: Path, *, isolated: bool, verbose: bool = False) -> int:
+def select_installer(
+    installer: Literal["pip", "uv", "uv|pip"],  # type: ignore[name-defined]
+) -> Literal["uv", "pip"]:
+    """
+    Select uv, pip, or uv if available, then pip ("uv|pip"). Returns uv, pip,
+    or throws an error if uv was required and not available.
+    """
+    if "uv" in installer:
+        if importlib.util.find_spec("uv") is not None:
+            return "uv"
+
+        if shutil.which("uv") is not None:
+            return "uv"
+
+        if installer == "uv":
+            msg = "Can't find uv"
+            raise ImportError(msg)
+
+    return "pip"
+
+
+def compare(
+    source_dir: Path,
+    *,
+    isolated: bool,
+    verbose: bool = False,
+    installer: Literal["uv", "pip", "uv|pip"] = "uv|pip",  # type: ignore[name-defined]
+) -> int:
     """
     Compare the files in the SDist with the files tracked by git.
 
@@ -26,6 +56,8 @@ def compare(source_dir: Path, *, isolated: bool, verbose: bool = False) -> int:
     git, 2 if the SDist is missing files that are tracked by git, and 3 if both
     conditions are true.
     """
+
+    installer = select_installer(installer)
 
     config = {}
     pyproject_toml = source_dir.joinpath("pyproject.toml")
@@ -38,7 +70,9 @@ def compare(source_dir: Path, *, isolated: bool, verbose: bool = False) -> int:
     default_ignore = config.get("default-ignore", True)
     recurse_submodules = config.get("recurse-submodules", True)
 
-    sdist = sdist_files(source_dir, isolated) - {"PKG-INFO"}
+    sdist = sdist_files(source_dir, isolated=isolated, installer=installer) - {
+        "PKG-INFO"
+    }
     git = git_files(source_dir, recurse_submodules=recurse_submodules)
 
     if default_ignore:
@@ -100,6 +134,12 @@ def main(sys_args: Sequence[str] | None = None, /) -> None:
         action="store_true",
         help="Print out SDist contents too",
     )
+    parser.add_argument(
+        "--installer",
+        choices={"uv", "pip", "uv|pip"},
+        default="uv|pip",
+        help="Tool to use when installing packages for making the SDist",
+    )
     args = parser.parse_args(sys_args)
 
     with contextlib.ExitStack() as stack:
@@ -107,7 +147,12 @@ def main(sys_args: Sequence[str] | None = None, /) -> None:
             stack.enter_context(inject_junk_files(args.source_dir))
 
     raise SystemExit(
-        compare(args.source_dir, isolated=not args.no_isolation, verbose=args.verbose)
+        compare(
+            args.source_dir,
+            isolated=not args.no_isolation,
+            verbose=args.verbose,
+            installer=args.installer,
+        )
     )
 
 
