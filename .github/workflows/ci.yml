@@ -49,11 +49,13 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - uses: yezz123/setup-uv@v4
+
       - name: Install package
-        run: python -m pip install .[test]
+        run: uv pip install -e.[test] --system
 
       - name: Test package
-        run: python -m pytest -ra --cov=check-sdist
+        run: pytest -ra --cov=check-sdist
 
       - name: Upload coverage report
         uses: codecov/codecov-action@v4

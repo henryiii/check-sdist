@@ -5,13 +5,24 @@ import sys
 import tarfile
 import tempfile
 from pathlib import Path
+from typing import Literal
 
 
-def sdist_files(source_dir: Path, isolated: bool) -> frozenset[str]:
+def sdist_files(
+    source_dir: Path, *, isolated: bool, installer: Literal["uv", "pip"]
+) -> frozenset[str]:
     """Return the files that would be (are) placed in the SDist."""
 
     with tempfile.TemporaryDirectory() as outdir:
-        cmd = [sys.executable, "-m", "build", "--sdist", "--outdir", outdir]
+        cmd = [
+            sys.executable,
+            "-m",
+            "build",
+            "--sdist",
+            "--outdir",
+            outdir,
+            f"--installer={installer}",
+        ]
         if not isolated:
             cmd.append("--no-isolation")
         subprocess.run(cmd, check=True, cwd=source_dir)
@@ -31,4 +42,4 @@ def sdist_files(source_dir: Path, isolated: bool) -> frozenset[str]:
 
 
 if __name__ == "__main__":
-    print(*sorted(sdist_files(Path.cwd(), True)), sep="\n")
+    print(*sorted(sdist_files(Path.cwd(), isolated=True, installer="pip")), sep="\n")
