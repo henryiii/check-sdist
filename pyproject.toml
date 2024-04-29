@@ -36,11 +36,11 @@ keywords = ["sdist", "packaging", "lint"]
 
 [project.optional-dependencies]
 test = [
-  "pytest >=6",
+  "pytest >=6,<8.2",
   "pytest-cov >=3",
 ]
 dev = [
-  "pytest >=6",
+  "pytest >=6,<8.2",
   "pytest-cov >=3",
 ]
 uv = [
