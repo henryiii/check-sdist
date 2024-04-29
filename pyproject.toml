@@ -38,10 +38,10 @@ keywords = ["sdist", "packaging", "lint"]
 test = [
   "pytest >=6",
   "pytest-cov >=3",
+  "pyproject-hooks !=1.1.0",
 ]
 dev = [
-  "pytest >=6",
-  "pytest-cov >=3",
+  "check-sdist[test]",
 ]
 uv = [
   "uv",
