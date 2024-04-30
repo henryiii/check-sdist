@@ -39,9 +39,7 @@ test = [
   "pytest >=6",
   "pytest-cov >=3",
   "pyproject-hooks !=1.1.0",
-]
-dev = [
-  "check-sdist[test]",
+  "validate-pyproject >=0.16",
 ]
 uv = [
   "uv",
@@ -60,10 +58,7 @@ check-sdist = "check_sdist.schema:get_schema"
 
 [tool.hatch]
 version.path = "src/check_sdist/__init__.py"
-envs.default.dependencies = [
-  "pytest",
-  "pytest-cov",
-]
+envs.default.features = ["test"]
 
 
 [tool.pytest.ini_options]

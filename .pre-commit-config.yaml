@@ -47,7 +47,13 @@ repos:
         files: src|tests
         args: []
         additional_dependencies:
-          ["tomli", "pathspec", "importlib-resources", "pytest"]
+          [
+            "tomli",
+            "pathspec",
+            "importlib-resources",
+            "pytest",
+            "validate-pyproject",
+          ]
 
   - repo: https://github.com/henryiii/check-sdist
     rev: "v0.1.3"
