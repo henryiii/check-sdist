@@ -47,7 +47,13 @@ repos:
         files: src|tests
         args: []
         additional_dependencies:
-          ["tomli", "pathspec", "importlib-resources", "pytest"]
+          [
+            "tomli",
+            "pathspec",
+            "importlib-resources",
+            "pytest",
+            "validate-pyproject",
+          ]
 
   - repo: https://github.com/henryiii/check-sdist
     rev: "v0.1.3"
@@ -74,3 +80,11 @@ repos:
         language: pygrep
         entry: PyBind|Numpy|Cmake|CCache|Github|PyTest
         exclude: .pre-commit-config.yaml
+
+  - repo: https://github.com/python-jsonschema/check-jsonschema
+    rev: 0.28.2
+    hooks:
+      - id: check-dependabot
+      - id: check-github-workflows
+      - id: check-metaschema
+        files: "^src/check_sdist/resources/check-sdist.schema.json$"
