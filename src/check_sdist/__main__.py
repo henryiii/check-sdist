@@ -69,11 +69,20 @@ def compare(
     git_only_patterns = config.get("git-only", [])
     default_ignore = config.get("default-ignore", True)
     recurse_submodules = config.get("recurse-submodules", True)
+    mode = config.get("mode", "git")
 
     sdist = sdist_files(source_dir, isolated=isolated, installer=installer) - {
         "PKG-INFO"
     }
-    git = git_files(source_dir, recurse_submodules=recurse_submodules)
+    if mode == "git":
+        git = git_files(source_dir, recurse_submodules=recurse_submodules)
+    elif mode == "all":
+        git = frozenset(
+            str(p.relative_to(source_dir)) for p in source_dir.rglob("*") if p.is_file()
+        )
+    else:
+        msg = "Only 'all' and 'git' supported for 'mode'"
+        raise ValueError(msg)
 
     if default_ignore:
         with resources.joinpath("default-ignore.txt").open("r", encoding="utf-8") as f:

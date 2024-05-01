@@ -83,6 +83,7 @@ sdist-only = []
 git-only = []
 default-ignore = true
 recurse-submodules = true
+mode = "git"
 ```
 
 You can add `.gitignore` style lines here, and you can turn off the default
@@ -91,6 +92,10 @@ ignore list, which adds some default git-only files.
 By default, check-sdist recursively scans the contents of Git submodules, but
 you can disable this behavior (e.g. to support older Git versions that don't
 have this capability).
+
+You can also select `mode = "all"`, which will instead check every file on your
+system. Be prepared to ignore lots of things manually, like `*.pyc` files, if
+you use this.
 
 ### See also
 
