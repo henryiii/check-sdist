@@ -22,7 +22,7 @@ properties:
     items:
       type: string
   git-only:
-    description: Files that are only in Git. Gitignore style lines.
+    description: Files that are only in Git (or whatever mode you use). Gitignore style lines.
     type: array
     items:
       type: string
@@ -34,6 +34,12 @@ properties:
     description: Look in all submodules too.
     default: true
     type: boolean
+  mode:
+    description: What to use as baseline
+    default: git
+    enum:
+      - git
+      - all
 """
 
 schema = yaml.safe_load(starter)
