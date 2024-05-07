@@ -11,7 +11,7 @@ description = "Check the contents of an SDist vs. git"
 readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [
-  "Development Status :: 4 - Beta",
+  "Development Status :: 5 - Production/Stable",
   "Intended Audience :: Developers",
   "License :: OSI Approved :: BSD License",
   "Operating System :: OS Independent",
@@ -59,6 +59,7 @@ check-sdist = "check_sdist.schema:get_schema"
 [tool.hatch]
 version.path = "src/check_sdist/__init__.py"
 envs.default.features = ["test"]
+envs.hatch-test.features = ["test", "cli"]
 
 
 [tool.pytest.ini_options]
