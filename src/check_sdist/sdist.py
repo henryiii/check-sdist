@@ -21,10 +21,8 @@ def sdist_files(
             "--sdist",
             "--outdir",
             outdir,
-            f"--installer={installer}",
+            f"--installer={installer}" if isolated else "--no-isolation",
         ]
-        if not isolated:
-            cmd.append("--no-isolation")
         subprocess.run(cmd, check=True, cwd=source_dir)
 
         (outpath,) = Path(outdir).glob("*.tar.gz")
@@ -32,7 +30,7 @@ def sdist_files(
         with tarfile.open(outpath) as tar:
             prefixes = {n.split("/", maxsplit=1)[0] for n in tar.getnames()}
             if len(prefixes) != 1:
-                msg = f"malformted SDist, contains multiple packages {prefixes}"
+                msg = f"malformed SDist, contains multiple packages {prefixes}"
                 raise AssertionError(msg)
             return frozenset(
                 t.name.split("/", maxsplit=1)[1]
