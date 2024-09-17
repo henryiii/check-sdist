@@ -19,7 +19,7 @@ from .sdist import sdist_files
 
 
 def select_installer(
-    installer: Literal["pip", "uv", "uv|pip"],  # type: ignore[name-defined]
+    installer: Literal["pip", "uv", "uv|pip"],
 ) -> Literal["uv", "pip"]:
     """
     Select uv, pip, or uv if available, then pip ("uv|pip"). Returns uv, pip,
@@ -44,7 +44,7 @@ def compare(
     *,
     isolated: bool,
     verbose: bool = False,
-    installer: Literal["uv", "pip", "uv|pip"] = "uv|pip",  # type: ignore[name-defined]
+    installer: Literal["uv", "pip", "uv|pip"] = "uv|pip",
 ) -> int:
     """
     Compare the files in the SDist with the files tracked by git.
