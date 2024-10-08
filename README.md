@@ -64,8 +64,10 @@ To use the [pre-commit](https://pre-commit.com) integration, put this in your
 This requires your build dependencies, but in doing so, it can cache the
 environment, making it quite fast. The installation is handled by pre-commit;
 see [`pre-commit-uv`](https://pypi.org/p/pre-commit-uv) if you want to try to
-optimize the initial setup. If you don't mind slower runs and don't want to
-require a build dependency listing:
+optimize the initial setup. If uv is present (including in your
+`additional_dependencies`), the build will be slightly faster, as uv is used to
+do the build. If you don't mind slower runs and don't want to require a build
+dependency listing:
 
 ```yaml
 - repo: https://github.com/henryiii/check-sdist
