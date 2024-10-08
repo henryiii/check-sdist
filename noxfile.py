@@ -34,7 +34,7 @@ def tests(session: nox.Session) -> None:
     Run the unit and regular tests.
     """
     session.install("-e.[test]")
-    session.run("pytest", *session.posargs)
+    session.run("pytest", *session.posargs, env={"COVERAGE_CORE": "sysmon"})
 
 
 @nox.session
@@ -43,7 +43,13 @@ def coverage(session: nox.Session) -> None:
     Run tests and compute coverage.
     """
 
-    session.posargs.append("--cov=check-sdist")
+    session.posargs.extend(
+        [
+            "--cov-config=pyproject.toml",
+            "--cov-report=xml",
+            "--cov-report=term-missing",
+        ]
+    )
     tests(session)
 
 

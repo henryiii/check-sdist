@@ -79,6 +79,10 @@ testpaths = [
 ]
 
 
+[tool.coverage]
+run.source = ["check_sdist"]
+
+
 [tool.mypy]
 files = ["src", "tests"]
 python_version = "3.8"

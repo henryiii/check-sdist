@@ -54,11 +54,8 @@ jobs:
 
       - uses: astral-sh/setup-uv@v3
 
-      - name: Install package
-        run: uv pip install -e.[test] --system
-
       - name: Test package
-        run: pytest -ra --cov=check-sdist
+        run: uvx nox -s coverage
 
       - name: Upload coverage report
         uses: codecov/codecov-action@v4
