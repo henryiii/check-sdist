@@ -61,7 +61,11 @@ check-sdist = "check_sdist.schema:get_schema"
 [tool.hatch]
 version.path = "src/check_sdist/__init__.py"
 envs.default.features = ["test"]
-envs.hatch-test.features = ["test", "cli"]
+envs.hatch-test.features = ["test"]
+
+
+[tool.uv]
+dev-dependencies = ["check-sdist[test]"]
 
 
 [tool.pytest.ini_options]
