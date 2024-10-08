@@ -62,8 +62,10 @@ To use the [pre-commit](https://pre-commit.com) integration, put this in your
 ```
 
 This requires your build dependencies, but in doing so, it can cache the
-environment, making it quite fast. If you don't mind slower runs and don't want
-to require build dependency listing:
+environment, making it quite fast. The installation is handled by pre-commit;
+see [`pre-commit-uv`](https://pypi.org/p/pre-commit-uv) if you want to try to
+optimize the initial setup. If you don't mind slower runs and don't want to
+require a build dependency listing:
 
 ```yaml
 - repo: https://github.com/henryiii/check-sdist
@@ -72,6 +74,9 @@ to require build dependency listing:
     - id: check-sdist-isolated
       args: [--inject-junk]
 ```
+
+This one defaults to including `uv` in `additional_dependencies`; you shouldn't
+have to specify anything else.
 
 ### Configuration
 
