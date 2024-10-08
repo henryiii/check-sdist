@@ -72,7 +72,10 @@ dev-dependencies = ["check-sdist[test]"]
 minversion = "6.0"
 addopts = ["-ra", "--showlocals", "--strict-markers", "--strict-config"]
 xfail_strict = true
-filterwarnings = ["error"]
+filterwarnings = [
+  "error",
+  "ignore:sys.monitoring isn't available:coverage.exceptions.CoverageWarning",
+]
 log_cli_level = "INFO"
 testpaths = [
   "tests",

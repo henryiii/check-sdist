@@ -45,6 +45,7 @@ def coverage(session: nox.Session) -> None:
 
     session.posargs.extend(
         [
+            "--cov",
             "--cov-config=pyproject.toml",
             "--cov-report=xml",
             "--cov-report=term-missing",
