@@ -1,4 +1,1 @@
 comment: false
-codecov:
-  notify:
-    after_n_builds: 8
