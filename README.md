@@ -1,6 +1,7 @@
 # check-sdist
 
 [![Actions Status][actions-badge]][actions-link]
+[![codecov][codecov-badge]][codecov-link]
 [![PyPI version][pypi-version]][pypi-link]
 [![PyPI platforms][pypi-platforms]][pypi-link]
 
@@ -10,7 +11,8 @@
 [pypi-link]:                https://pypi.org/project/check-sdist/
 [pypi-platforms]:           https://img.shields.io/pypi/pyversions/check-sdist
 [pypi-version]:             https://img.shields.io/pypi/v/check-sdist
-
+[codecov-badge]:            https://codecov.io/gh/henryiii/check-sdist/graph/badge.svg?token=noB2wxFVBr
+[codecov-link]:             https://codecov.io/gh/henryiii/check-sdist
 <!-- prettier-ignore-end -->
 
 Have you ever shipped broken SDists with missing files or possibly dirty SDists
