@@ -2,8 +2,6 @@ from __future__ import annotations
 
 import argparse
 import contextlib
-import importlib.util
-import shutil
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Literal
@@ -15,7 +13,7 @@ from ._compat import tomllib
 from .git import git_files
 from .inject import inject_junk_files
 from .resources import resources
-from .sdist import sdist_files
+from .sdist import get_uv, sdist_files
 
 
 def select_installer(
@@ -26,10 +24,7 @@ def select_installer(
     or throws an error if uv was required and not available.
     """
     if "uv" in installer:
-        if importlib.util.find_spec("uv") is not None:
-            return "uv"
-
-        if shutil.which("uv") is not None:
+        if get_uv() is not None:
             return "uv"
 
         if installer == "uv":
