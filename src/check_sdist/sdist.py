@@ -1,11 +1,27 @@
 from __future__ import annotations
 
+import shutil
 import subprocess
 import sys
 import tarfile
 import tempfile
 from pathlib import Path
 from typing import Literal
+
+__all__ = ["get_uv", "sdist_files"]
+
+
+def get_uv() -> str | None:
+    """
+    Find uv and return the arguments to use it.
+    """
+    try:
+        # pylint: disable-next=import-outside-toplevel
+        import uv
+
+        return uv.find_uv_bin()
+    except ModuleNotFoundError:
+        return shutil.which("uv")
 
 
 def sdist_files(
@@ -14,15 +30,29 @@ def sdist_files(
     """Return the files that would be (are) placed in the SDist."""
 
     with tempfile.TemporaryDirectory() as outdir:
-        cmd = [
-            sys.executable,
-            "-m",
-            "build",
-            "--sdist",
-            "--outdir",
-            outdir,
-            f"--installer={installer}" if isolated else "--no-isolation",
-        ]
+        if installer == "pip":
+            cmd = [
+                sys.executable,
+                "-m",
+                "build",
+                "--sdist",
+                "--outdir",
+                outdir,
+                f"--installer={installer}" if isolated else "--no-isolation",
+            ]
+        else:
+            uv = get_uv()
+            assert uv is not None, "uv must be found to reach this point!"
+            cmd = [
+                uv,
+                "build",
+                "--sdist",
+                "--python",
+                sys.executable,
+                "--out-dir",
+                outdir,
+            ]
+
         subprocess.run(cmd, check=True, cwd=source_dir)
 
         (outpath,) = Path(outdir).glob("*.tar.gz")
