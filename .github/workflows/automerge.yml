@@ -15,6 +15,6 @@ jobs:
     steps:
       - name: Enable auto-merge for Dependabot PRs
         run:
-          gh pr merge --auto --rebase "${{github.event.pull_request.html_url}}"
+          gh pr merge --auto --squash "${{github.event.pull_request.html_url}}"
         env:
           GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
