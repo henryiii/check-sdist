@@ -77,3 +77,12 @@ jobs:
           fetch-depth: 0
 
       - uses: hynek/build-and-inspect-python-package@v2
+
+  pass:
+    if: always()
+    needs: [pylint, checks, dist]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: re-actors/alls-green@release/v1
+        with:
+          jobs: ${{ toJSON(needs) }}
