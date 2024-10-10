@@ -34,6 +34,8 @@ To run:
 
 ```console
 $ pipx run check-sdist[uv]
+# Or, if you have uv:
+$ uvx check-sdist
 ```
 
 You can add `--no-isolation` to disable build isolation (faster, but must
