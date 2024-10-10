@@ -35,6 +35,7 @@ To run:
 ```console
 $ pipx run check-sdist[uv]
 ```
+
 Or, if you have uv:
 
 ```console
