@@ -36,6 +36,12 @@ To run:
 $ pipx run check-sdist[uv]
 ```
 
+Or, if you have uv:
+
+```console
+$ uvx check-sdist
+```
+
 You can add `--no-isolation` to disable build isolation (faster, but must
 preinstall build dependencies), `--source-dir` to select a different source
 directory to check, and `--inject-junk` to temporarily inject some common junk
