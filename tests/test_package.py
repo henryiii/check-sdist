@@ -46,11 +46,14 @@ def git_dir(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     )
     Path("example").mkdir()
     Path("example/__init__.py").touch()
+    Path("example/notme.py").touch()
     Path("ignore-me.txt").touch()
     Path("not-ignored.txt").touch()
     Path("some-file").touch()
     Path("some-dir").mkdir()
-    Path("some-dir/notme.txt").touch()
+    Path("some-dir/notme.py").touch()
+    Path("some-dir/more-dir").mkdir()
+    Path("some-dir/more-dir/notme.py").touch()
     Path("some-ignored-file.txt").touch()
 
     return tmp_path
@@ -70,7 +73,7 @@ def test_hatchling(backend: str):
             version = "0.1.0"
 
             [tool.hatch]
-            build.targets.sdist.exclude = ["ignore*", "some-file", "**/notme.txt"]
+            build.targets.sdist.exclude = ["ignore*", "some-file", "**/notme.py"]
 
             [tool.check-sdist]
             build-backend = "{backend}"
@@ -99,7 +102,7 @@ def test_flit_core(backend: str):
 
             [tool.flit.sdist]
             include = ["not-ignored.txt", ".gitignore"]
-            exclude = ["ignore*", "some-file", "**/notme.txt"]
+            exclude = ["ignore*", "some-file", "**/notme.py"]
 
             [tool.check-sdist]
             build-backend = "{backend}"
@@ -126,7 +129,7 @@ def test_scikit_build_core(backend: str):
             version = "0.1.0"
 
             [tool.scikit-build]
-            sdist.exclude = ["ignore*", "some-file", "**/notme.txt"]
+            sdist.exclude = ["ignore*", "some-file", "**/notme.py"]
 
             [tool.check-sdist]
             build-backend = "{backend}"
@@ -154,7 +157,7 @@ def test_pdm_backend(backend: str):
 
             [tool.pdm]
             build.source-includes = [".gitignore", "not-ignored.txt"]
-            build.excludes = ["ignore*", "some-file", "**/notme.txt"]
+            build.excludes = ["ignore*", "some-file", "**/notme.py"]
 
             [tool.check-sdist]
             build-backend = "{backend}"
@@ -182,7 +185,7 @@ def test_maturin(backend: str):
 
             [tool.maturin]
             features = ["pyo3/extension-module"]
-            exclude = ["ignore*", "some-file", "**/notme.txt"]
+            exclude = ["ignore*", "some-file", "**/notme.py"]
 
             [tool.check-sdist]
             build-backend = "{backend}"
@@ -223,7 +226,7 @@ def test_poetry_core(backend: str):
             authors = []
             description = "A test package."
             include = [".gitignore", "not-ignored.txt"]
-            exclude = ["ignore*", {{path="some-file", format=["sdist"]}}, "**/notme.txt"]
+            exclude = ["ignore*", {{path="some-file", format=["sdist"]}}, "**/notme.py"]
 
             [tool.check-sdist]
             build-backend = "{backend}"
