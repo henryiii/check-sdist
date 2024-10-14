@@ -5,6 +5,31 @@ from typing import Any
 
 import pathspec
 
+__all__ = ["backend_ignored_patterns"]
+
+
+def __dir__() -> list[str]:
+    return __all__
+
+
+def glob_filter(patterns: list[str], files: frozenset[str]) -> frozenset[str]:
+    """
+    Filter out files based on glob patterns.
+    """
+    new_files = set(files)
+    for pattern in patterns:
+        results = {str(p.as_posix()) for p in Path().glob(pattern)}
+        new_files -= results
+    return frozenset(new_files)
+
+
+def pathspec_filter(patterns: list[str], files: frozenset[str]) -> frozenset[str]:
+    """
+    Filter out files based on gitignore-style patterns.
+    """
+    spec = pathspec.GitIgnoreSpec.from_lines(patterns)
+    return frozenset(p for p in files if not spec.match_file(p))
+
 
 def backend_ignored_patterns(
     backend: str, pyproject: dict[str, Any], files: frozenset[str]
@@ -34,10 +59,7 @@ def backend_ignored_patterns(
             .get("sdist", {})
             .get("exclude", [])
         )
-        for pattern in exclude:
-            results = {str(p.as_posix()) for p in Path().glob(pattern)}
-            files = files - results
-        return files
+        return glob_filter(exclude, files)
     if backend_resolved == "hatchling.build":
         exclude = (
             pyproject.get("tool", {})
@@ -47,8 +69,7 @@ def backend_ignored_patterns(
             .get("sdist", {})
             .get("exclude", [])
         )
-        sdist_spec = pathspec.GitIgnoreSpec.from_lines(exclude)
-        return frozenset(p for p in files if not sdist_spec.match_file(p))
+        return pathspec_filter(exclude, files)
     if backend_resolved == "scikit_build_core.build":
         exclude = (
             pyproject.get("tool", {})
@@ -56,8 +77,7 @@ def backend_ignored_patterns(
             .get("sdist", {})
             .get("exclude", [])
         )
-        sdist_spec = pathspec.GitIgnoreSpec.from_lines(exclude)
-        return frozenset(p for p in files if not sdist_spec.match_file(p))
+        return pathspec_filter(exclude, files)
     if backend_resolved == "pdm.backend":
         exclude = (
             pyproject.get("tool", {})
@@ -65,25 +85,17 @@ def backend_ignored_patterns(
             .get("build", {})
             .get("excludes", [])
         )
-        for pattern in exclude:
-            results = {str(p) for p in Path().glob(pattern)}
-            files = files - results
-        return files
+        return glob_filter(exclude, files)
     if backend_resolved == "poetry.core.masonry.api":
         exclude = [
             x if isinstance(x, str) else x["path"]
             for x in pyproject.get("tool", {}).get("poetry", {}).get("exclude", [])
             if isinstance(x, str) or "sdist" in x.get("format", ["sdist"])
         ]
-        for pattern in exclude:
-            results = {str(p) for p in Path().glob(pattern)}
-            files = files - results
+        return glob_filter(exclude, files)
     if backend_resolved == "maturin":
         exclude = pyproject.get("tool", {}).get("maturin", {}).get("exclude", [])
-        for pattern in exclude:
-            results = {str(p) for p in Path().glob(pattern)}
-            files = files - results
-        return files
+        return glob_filter(exclude, files)
     if backend != "auto":
         msg = f"Unknown backend: {backend} - please add support in check_dist.backends"
         raise ValueError(msg)
