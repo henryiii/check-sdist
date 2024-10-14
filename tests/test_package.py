@@ -259,5 +259,5 @@ def test_unknown_backend():
 
     subprocess.run(["git", "add", "."], check=True)
     subprocess.run(["git", "commit", "-m", "Initial commit"], check=True)
-    with pytest.raises(ValueError, match="Unknown backend: unknown") as excinfo:
+    with pytest.raises(ValueError, match="Unknown backend: unknown"):
         compare(Path(), isolated=True, verbose=True)

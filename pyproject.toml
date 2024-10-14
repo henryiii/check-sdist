@@ -84,6 +84,9 @@ testpaths = [
 
 [tool.coverage]
 run.source = ["check_sdist"]
+report.exclude_also = [
+    "return __all__",
+]
 
 
 [tool.mypy]
