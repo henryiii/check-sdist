@@ -10,6 +10,7 @@ import pathspec
 
 from . import __version__
 from ._compat import tomllib
+from .backends import backend_ignored_patterns
 from .git import git_files
 from .inject import inject_junk_files
 from .resources import resources
@@ -54,6 +55,7 @@ def compare(
 
     installer = select_installer(installer)
 
+    pyproject = {}
     config = {}
     pyproject_toml = source_dir.joinpath("pyproject.toml")
     with contextlib.suppress(FileNotFoundError), pyproject_toml.open("rb") as f:
@@ -65,6 +67,7 @@ def compare(
     default_ignore = config.get("default-ignore", True)
     recurse_submodules = config.get("recurse-submodules", True)
     mode = config.get("mode", "git")
+    backend = config.get("build-backend", "auto")
 
     sdist = sdist_files(source_dir, isolated=isolated, installer=installer) - {
         "PKG-INFO"
@@ -89,6 +92,8 @@ def compare(
 
     sdist_only = frozenset(p for p in sdist - git if not sdist_spec.match_file(p))
     git_only = frozenset(p for p in git - sdist if not git_spec.match_file(p))
+
+    git_only = backend_ignored_patterns(backend, pyproject, git_only)
 
     if verbose:
         print("SDist contents:")
