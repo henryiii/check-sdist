@@ -194,7 +194,7 @@ def test_maturin(backend: str):
     Path("Cargo.toml").write_text(
         inspect.cleandoc("""
             [package]
-            name = "guessing-game"
+            name = "example"
             version = "0.1.0"
             edition = "2021"
 
@@ -237,3 +237,27 @@ def test_poetry_core(backend: str):
     assert compare(Path(), isolated=True, verbose=True) == (
         0 if backend == "auto" else 2
     )
+
+
+@pytest.mark.usefixtures("git_dir")
+def test_unknown_backend():
+    Path("pyproject.toml").write_text(
+        inspect.cleandoc("""
+            [build-system]
+            requires = ["flit-core"]
+            build-backend = "flit_core.buildapi"
+
+            [project]
+            name = "example"
+            version = "0.1.0"
+            description = "A test package"
+
+            [tool.check-sdist]
+            build-backend = "unknown"
+        """)
+    )
+
+    subprocess.run(["git", "add", "."], check=True)
+    subprocess.run(["git", "commit", "-m", "Initial commit"], check=True)
+    with pytest.raises(ValueError, match="Unknown backend: unknown") as excinfo:
+        compare(Path(), isolated=True, verbose=True)
