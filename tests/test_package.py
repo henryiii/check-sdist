@@ -167,14 +167,13 @@ def test_pdm_backend(backend: str):
     )
 
 
-@pytest.mark.skip
 @pytest.mark.usefixtures("git_dir")
 @pytest.mark.parametrize("backend", ["auto", "none"])
 def test_maturin(backend: str):
     Path("pyproject.toml").write_text(
         inspect.cleandoc(f"""
             [build-system]
-            requires = ["maturin"]
+            requires = ["maturin~=1.0"]
             build-backend = "maturin"
 
             [project]
@@ -182,6 +181,7 @@ def test_maturin(backend: str):
             version = "0.1.0"
 
             [tool.maturin]
+            features = ["pyo3/extension-module"]
             exclude = ["ignore*", "some-file", "**/notme.txt"]
 
             [tool.check-sdist]
@@ -194,6 +194,9 @@ def test_maturin(backend: str):
             name = "guessing-game"
             version = "0.1.0"
             edition = "2021"
+
+            [dependencies.pyo3]
+            version = "0.22.4"
         """)
     )
     Path("src").mkdir()
