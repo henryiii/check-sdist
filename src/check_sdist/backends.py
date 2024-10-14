@@ -28,18 +28,18 @@ def backend_ignored_patterns(
     )
 
     if backend_resolved == "flit_core.buildapi":
-        flit_core_exclude = (
+        exclude = (
             pyproject.get("tool", {})
             .get("flit", {})
             .get("sdist", {})
             .get("exclude", [])
         )
-        for pattern in flit_core_exclude:
-            results = {str(p) for p in Path().glob(pattern)}
+        for pattern in exclude:
+            results = {str(p.as_posix()) for p in Path().glob(pattern)}
             files = files - results
         return files
     if backend_resolved == "hatchling.build":
-        hatch_exclude = (
+        exclude = (
             pyproject.get("tool", {})
             .get("hatch", {})
             .get("build", {})
@@ -47,17 +47,43 @@ def backend_ignored_patterns(
             .get("sdist", {})
             .get("exclude", [])
         )
-        sdist_spec = pathspec.GitIgnoreSpec.from_lines(hatch_exclude)
+        sdist_spec = pathspec.GitIgnoreSpec.from_lines(exclude)
         return frozenset(p for p in files if not sdist_spec.match_file(p))
     if backend_resolved == "scikit_build_core.build":
-        hatch_exclude = (
+        exclude = (
             pyproject.get("tool", {})
             .get("scikit-build", {})
             .get("sdist", {})
             .get("exclude", [])
         )
-        sdist_spec = pathspec.GitIgnoreSpec.from_lines(hatch_exclude)
+        sdist_spec = pathspec.GitIgnoreSpec.from_lines(exclude)
         return frozenset(p for p in files if not sdist_spec.match_file(p))
+    if backend_resolved == "pdm.backend":
+        exclude = (
+            pyproject.get("tool", {})
+            .get("pdm", {})
+            .get("build", {})
+            .get("excludes", [])
+        )
+        for pattern in exclude:
+            results = {str(p) for p in Path().glob(pattern)}
+            files = files - results
+        return files
+    if backend_resolved == "poetry.core.masonry.api":
+        exclude = [
+            x if isinstance(x, str) else x["path"]
+            for x in pyproject.get("tool", {}).get("poetry", {}).get("exclude", [])
+            if isinstance(x, str) or "sdist" in x.get("format", ["sdist"])
+        ]
+        for pattern in exclude:
+            results = {str(p) for p in Path().glob(pattern)}
+            files = files - results
+    if backend_resolved == "maturin":
+        exclude = pyproject.get("tool", {}).get("maturin", {}).get("exclude", [])
+        for pattern in exclude:
+            results = {str(p) for p in Path().glob(pattern)}
+            files = files - results
+        return files
     if backend != "auto":
         msg = f"Unknown backend: {backend} - please add support in check_dist.backends"
         raise ValueError(msg)

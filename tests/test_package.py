@@ -39,6 +39,20 @@ def git_dir(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     subprocess.run(["git", "init"], check=True)
     subprocess.run(["git", "config", "user.email", "ci@example.com"], check=True)
     subprocess.run(["git", "config", "user.name", "CI"], check=True)
+    Path(".gitignore").write_text(
+        inspect.cleandoc("""
+        some-ignored-file.txt
+    """)
+    )
+    Path("example").mkdir()
+    Path("example/__init__.py").touch()
+    Path("ignore-me.txt").touch()
+    Path("not-ignored.txt").touch()
+    Path("some-file").touch()
+    Path("some-dir").mkdir()
+    Path("some-dir/notme.txt").touch()
+    Path("some-ignored-file.txt").touch()
+
     return tmp_path
 
 
@@ -52,7 +66,7 @@ def test_hatchling(backend: str):
             build-backend = "hatchling.build"
 
             [project]
-            name = "hatchling-test"
+            name = "example"
             version = "0.1.0"
 
             [tool.hatch]
@@ -62,19 +76,8 @@ def test_hatchling(backend: str):
             build-backend = "{backend}"
         """)
     )
-    Path(".gitignore").write_text(
-        inspect.cleandoc("""
-        some-ignored-file.txt
-    """)
-    )
-    Path("ignore-me.txt").touch()
-    Path("not-ignored.txt").touch()
-    Path("some-file").touch()
-    Path("some-dir").mkdir()
-    Path("some-dir/notme.txt").touch()
     subprocess.run(["git", "add", "."], check=True)
     subprocess.run(["git", "commit", "-m", "Initial commit"], check=True)
-    Path("some-ignored-file.txt").touch()
     assert compare(Path(), isolated=True, verbose=True) == (
         0 if backend == "auto" else 2
     )
@@ -90,7 +93,7 @@ def test_flit_core(backend: str):
             build-backend = "flit_core.buildapi"
 
             [project]
-            name = "flit-core-test"
+            name = "example"
             version = "0.1.0"
             description = "A test package"
 
@@ -102,21 +105,129 @@ def test_flit_core(backend: str):
             build-backend = "{backend}"
         """)
     )
-    Path(".gitignore").write_text(
-        inspect.cleandoc("""
-        some-ignored-file.txt
-    """)
-    )
-    Path("ignore-me.txt").touch()
-    Path("not-ignored.txt").touch()
-    Path("some-file").touch()
-    Path("some-dir").mkdir()
-    Path("some-dir/notme.txt").touch()
-    Path("flit_core_test").mkdir()
-    Path("flit_core_test/__init__.py").touch()
     subprocess.run(["git", "add", "."], check=True)
     subprocess.run(["git", "commit", "-m", "Initial commit"], check=True)
-    Path("some-ignored-file.txt").touch()
+    assert compare(Path(), isolated=True, verbose=True) == (
+        0 if backend == "auto" else 2
+    )
+
+
+@pytest.mark.usefixtures("git_dir")
+@pytest.mark.parametrize("backend", ["auto", "none"])
+def test_scikit_build_core(backend: str):
+    Path("pyproject.toml").write_text(
+        inspect.cleandoc(f"""
+            [build-system]
+            requires = ["scikit-build-core"]
+            build-backend = "scikit_build_core.build"
+
+            [project]
+            name = "example"
+            version = "0.1.0"
+
+            [tool.scikit-build]
+            sdist.exclude = ["ignore*", "some-file", "**/notme.txt"]
+
+            [tool.check-sdist]
+            build-backend = "{backend}"
+        """)
+    )
+    subprocess.run(["git", "add", "."], check=True)
+    subprocess.run(["git", "commit", "-m", "Initial commit"], check=True)
+    assert compare(Path(), isolated=True, verbose=True) == (
+        0 if backend == "auto" else 2
+    )
+
+
+@pytest.mark.usefixtures("git_dir")
+@pytest.mark.parametrize("backend", ["auto", "none"])
+def test_pdm_backend(backend: str):
+    Path("pyproject.toml").write_text(
+        inspect.cleandoc(f"""
+            [build-system]
+            requires = ["pdm-backend"]
+            build-backend = "pdm.backend"
+
+            [project]
+            name = "example"
+            version = "0.1.0"
+
+            [tool.pdm]
+            build.source-includes = [".gitignore", "not-ignored.txt"]
+            build.excludes = ["ignore*", "some-file", "**/notme.txt"]
+
+            [tool.check-sdist]
+            build-backend = "{backend}"
+        """)
+    )
+    subprocess.run(["git", "add", "."], check=True)
+    subprocess.run(["git", "commit", "-m", "Initial commit"], check=True)
+    assert compare(Path(), isolated=True, verbose=True) == (
+        0 if backend == "auto" else 2
+    )
+
+
+@pytest.mark.skip
+@pytest.mark.usefixtures("git_dir")
+@pytest.mark.parametrize("backend", ["auto", "none"])
+def test_maturin(backend: str):
+    Path("pyproject.toml").write_text(
+        inspect.cleandoc(f"""
+            [build-system]
+            requires = ["maturin"]
+            build-backend = "maturin"
+
+            [project]
+            name = "example"
+            version = "0.1.0"
+
+            [tool.maturin]
+            exclude = ["ignore*", "some-file", "**/notme.txt"]
+
+            [tool.check-sdist]
+            build-backend = "{backend}"
+        """)
+    )
+    Path("Cargo.toml").write_text(
+        inspect.cleandoc("""
+            [package]
+            name = "guessing-game"
+            version = "0.1.0"
+            edition = "2021"
+        """)
+    )
+    Path("src").mkdir()
+    Path("src/lib.rs").write_text("")
+    subprocess.run(["git", "add", "."], check=True)
+    subprocess.run(["git", "commit", "-m", "Initial commit"], check=True)
+    assert compare(Path(), isolated=True, verbose=True) == (
+        0 if backend == "auto" else 2
+    )
+
+
+@pytest.mark.usefixtures("git_dir")
+@pytest.mark.parametrize("backend", ["auto", "none"])
+def test_poetry_core(backend: str):
+    Path("pyproject.toml").write_text(
+        inspect.cleandoc(f"""
+            [build-system]
+            requires = ["poetry-core"]
+            build-backend = "poetry.core.masonry.api"
+
+            [tool.poetry]
+            name = "example"
+            version = "0.1.0"
+            authors = []
+            description = "A test package."
+            include = [".gitignore", "not-ignored.txt"]
+            exclude = ["ignore*", {{path="some-file", format=["sdist"]}}, "**/notme.txt"]
+
+            [tool.check-sdist]
+            build-backend = "{backend}"
+        """)
+    )
+    subprocess.run(["git", "add", "."], check=True)
+    subprocess.run(["git", "commit", "-m", "Initial commit"], check=True)
     assert compare(Path(), isolated=True, verbose=True) == (
         0 if backend == "auto" else 2
     )

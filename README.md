@@ -115,8 +115,9 @@ you use this.
 
 You can tell check-sdist to look for exclude lists for a specific build backend
 with `build-backend`, or `"none"` to only use it's own exclude list. Build
-backends supported are `"flit_core.buildapi"`, `"hatchling.build"`, and
-`"scikit_build_core.build"`. The default, `"auto"`, will try to detect the build
+backends supported are `"flit_core.buildapi"`, `"hatchling.build"`,
+`"scikit_build_core.build"`, `"pdm.backend"`, `"maturin"`, and
+`"poetry.core.masonry.api"`. The default, `"auto"`, will try to detect the build
 backend if `build-system.build-backend` is set to a known value.
 
 ### See also
