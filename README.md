@@ -99,6 +99,7 @@ git-only = []
 default-ignore = true
 recurse-submodules = true
 mode = "git"
+build-backend = "auto"
 ```
 
 You can add `.gitignore` style lines here, and you can turn off the default
@@ -111,6 +112,12 @@ have this capability).
 You can also select `mode = "all"`, which will instead check every file on your
 system. Be prepared to ignore lots of things manually, like `*.pyc` files, if
 you use this.
+
+You can tell check-sdist to look for exclude lists for a specific build backend
+with `build-backend`, or `"none"` to only use it's own exclude list. Build
+backends supported are `"flit_core.buildapi"`, `"hatchling.build"`, and
+`"scikit_build_core.build"`. The default, `"auto"`, will try to detect the build
+backend if `build-system.build-backend` is set to a known value.
 
 ### See also
 
