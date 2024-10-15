@@ -5,16 +5,6 @@
 [![PyPI version][pypi-version]][pypi-link]
 [![PyPI platforms][pypi-platforms]][pypi-link]
 
-<!-- prettier-ignore-start -->
-[actions-badge]:            https://github.com/henryiii/check-sdist/workflows/CI/badge.svg
-[actions-link]:             https://github.com/henryiii/check-sdist/actions
-[pypi-link]:                https://pypi.org/project/check-sdist/
-[pypi-platforms]:           https://img.shields.io/pypi/pyversions/check-sdist
-[pypi-version]:             https://img.shields.io/pypi/v/check-sdist
-[codecov-badge]:            https://codecov.io/gh/henryiii/check-sdist/graph/badge.svg?token=noB2wxFVBr
-[codecov-link]:             https://codecov.io/gh/henryiii/check-sdist
-<!-- prettier-ignore-end -->
-
 Have you ever shipped broken SDists with missing files or possibly dirty SDists
 with files that shouldn't have been there? Have you noticed that standards
 compliant tools aren't making the same SDist that `flit build` is? Is hatchling
@@ -30,13 +20,13 @@ files.
 
 ### Quick start
 
-To run:
+To run with [pipx][]:
 
 ```console
 $ pipx run check-sdist[uv]
 ```
 
-Or, if you have uv:
+Or, if you like [uv][] instead (faster):
 
 ```console
 $ uvx check-sdist
@@ -127,3 +117,15 @@ backend if `build-system.build-backend` is set to a known value.
   files.
 - [Scientific Python Development Guide](https://learn.scientific-python.org/development/):
   Guidelines on which this package was designed.
+
+<!-- prettier-ignore-start -->
+[actions-badge]:            https://github.com/henryiii/check-sdist/workflows/CI/badge.svg
+[actions-link]:             https://github.com/henryiii/check-sdist/actions
+[pypi-link]:                https://pypi.org/project/check-sdist/
+[pypi-platforms]:           https://img.shields.io/pypi/pyversions/check-sdist
+[pypi-version]:             https://img.shields.io/pypi/v/check-sdist
+[codecov-badge]:            https://codecov.io/gh/henryiii/check-sdist/graph/badge.svg?token=noB2wxFVBr
+[codecov-link]:             https://codecov.io/gh/henryiii/check-sdist
+[pipx]:                     https://pipx.pypa.io
+[uv]:                       https://docs.astral.sh/uv
+<!-- prettier-ignore-end -->
