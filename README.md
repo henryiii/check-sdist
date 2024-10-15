@@ -118,7 +118,6 @@ backend if `build-system.build-backend` is set to a known value.
 - [Scientific Python Development Guide](https://learn.scientific-python.org/development/):
   Guidelines on which this package was designed.
 
-
 <!-- prettier-ignore-start -->
 [actions-badge]:            https://github.com/henryiii/check-sdist/workflows/CI/badge.svg
 [actions-link]:             https://github.com/henryiii/check-sdist/actions
@@ -130,4 +129,3 @@ backend if `build-system.build-backend` is set to a known value.
 [pipx]:                     https://pipx.pypa.io
 [uv]:                       https://docs.astral.sh/uv
 <!-- prettier-ignore-end -->
-
