@@ -61,7 +61,7 @@ jobs:
         run: uv tool install coverage
 
       - name: Upload coverage report
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           plugin: pycoverage
