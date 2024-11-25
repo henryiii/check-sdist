@@ -7,7 +7,7 @@ from pathlib import Path
 
 from .resources import resources
 
-__all__ = ["inject_junk_files", "inject_files"]
+__all__ = ["inject_files", "inject_junk_files"]
 
 
 @contextlib.contextmanager
