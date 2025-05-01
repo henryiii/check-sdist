@@ -18,7 +18,7 @@ ref = "0.17.0"
 
 [[packages]]
 repo = "pybind/pybind11"
-ref = "v2.10.3"
+ref = "v2.13.6"
 fail = 2
 
 [[packages]]
