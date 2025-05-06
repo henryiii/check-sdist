@@ -37,7 +37,7 @@ def tests(session: nox.Session) -> None:
     """
     test_grp = nox.project.dependency_groups(PYPROJECT, "test")
     session.install("-e.", *test_grp)
-    session.run("pytest", *session.posargs, env={"COVERAGE_CORE": "sysmon"})
+    session.run("pytest", "-nauto", *session.posargs, env={"COVERAGE_CORE": "sysmon"})
 
 
 @nox.session(default=False)
