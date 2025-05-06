@@ -4,8 +4,10 @@ from pathlib import Path
 
 import nox
 
-nox.needs_version = ">=2024.4.15"
+nox.needs_version = ">=2025.2.9"
 nox.options.default_venv_backend = "uv|virtualenv"
+
+PYPROJECT = nox.project.load_toml()
 
 
 @nox.session
@@ -33,11 +35,12 @@ def tests(session: nox.Session) -> None:
     """
     Run the unit and regular tests.
     """
-    session.install("-e.[test]")
+    test_grp = nox.project.dependency_groups(PYPROJECT, "test")
+    session.install("-e.", *test_grp)
     session.run("pytest", *session.posargs, env={"COVERAGE_CORE": "sysmon"})
 
 
-@nox.session
+@nox.session(default=False)
 def coverage(session: nox.Session) -> None:
     """
     Run tests and compute coverage.
@@ -64,7 +67,7 @@ def build(session: nox.Session) -> None:
     session.run("python", "-m", "build")
 
 
-@nox.session
+@nox.session(tags=["gen"])
 def generate_schema(session: nox.Session) -> None:
     """
     Generate a schema file.
