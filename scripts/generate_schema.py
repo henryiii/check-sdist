@@ -40,6 +40,18 @@ properties:
     enum:
       - git
       - all
+  build-backend:
+    description: What to expect as build-backend, in order to look for exclude lists
+    default: auto
+    enum:
+      - auto
+      - none
+      - flit_core.buildapi
+      - hatchling.build
+      - scikit_build_core.build
+      - pdm.backend.api
+      - poetry.core.masonry.api
+      - maturin
 """
 
 schema = yaml.safe_load(starter)
