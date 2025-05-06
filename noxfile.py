@@ -9,6 +9,7 @@ nox.options.default_venv_backend = "uv|virtualenv"
 
 PYPROJECT = nox.project.load_toml()
 
+
 @nox.session
 def lint(session: nox.Session) -> None:
     """
