@@ -1,20 +1,19 @@
 [[packages]]
 repo = "pypa/build"
-ref = "0.10.0"
-fail = 2
+ref = "1.2.2.post1"
 
 [[packages]]
 repo = "FriedrichFroebel/pelican-youtube-thumbnails"
-ref = "0.3.2"
+ref = "0.3.3"
 fail = 2
 
 [[packages]]
 repo = "scikit-build/scikit-build-core"
-ref = "v0.2.1"
+ref = "v0.11.2"
 
 [[packages]]
 repo = "scikit-build/scikit-build"
-ref = "0.17.0"
+ref = "0.18.0"
 
 [[packages]]
 repo = "pybind/pybind11"
@@ -23,4 +22,4 @@ fail = 2
 
 [[packages]]
 repo = "isce-framework/snaphu-py"
-ref = "v0.3.0"
+ref = "v0.4.1"
