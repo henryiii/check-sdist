@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -28,11 +29,15 @@ with DIR.joinpath("downstream.toml").open("rb") as f:
     ("repo", "ref", "fail"), [(x["repo"], x["ref"], x.get("fail", 0)) for x in packages]
 )
 def test_packages(repo, ref, fail, tmp_path, monkeypatch, installer):
+    if repo.endswith("scikit-build") and sys.platform.startswith("win32"):
+        pytest.skip(reason="Path too long on Windows (0.18)")
+
     monkeypatch.chdir(tmp_path)
     cmd = [
         "git",
         "clone",
         f"https://github.com/{repo}",
+        "--depth=1",
         "--branch",
         ref,
         "--recurse-submodules",
