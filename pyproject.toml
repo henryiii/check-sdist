@@ -36,12 +36,6 @@ dependencies = [
 keywords = ["sdist", "packaging", "lint"]
 
 [project.optional-dependencies]
-test = [
-  "pytest >=6",
-  "pytest-cov >=3",
-  "pyproject-hooks !=1.1.0",
-  "validate-pyproject >=0.16",
-]
 uv = [
   "uv",
 ]
@@ -57,6 +51,14 @@ check-sdist = "check_sdist.__main__:main"
 [project.entry-points."validate_pyproject.tool_schema"]
 check-sdist = "check_sdist.schema:get_schema"
 
+[dependency-groups]
+test = [
+  "pytest >=7",
+  "pytest-cov >=3",
+  "pyproject-hooks !=1.1.0",
+  "validate-pyproject >=0.16",
+]
+
 
 [tool.hatch]
 version.path = "src/check_sdist/__init__.py"
@@ -64,12 +66,8 @@ envs.default.features = ["test"]
 envs.hatch-test.features = ["test"]
 
 
-[tool.uv]
-dev-dependencies = ["check-sdist[test]"]
-
-
 [tool.pytest.ini_options]
-minversion = "6.0"
+minversion = "7.0"
 addopts = ["-ra", "--showlocals", "--strict-markers", "--strict-config"]
 xfail_strict = true
 filterwarnings = [
