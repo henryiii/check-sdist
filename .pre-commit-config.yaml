@@ -50,7 +50,6 @@ repos:
         additional_dependencies:
           - tomli
           - pathspec
-          - importlib-resources
           - pytest
           - validate-pyproject
           - uv
