@@ -33,6 +33,7 @@ def test_packages(repo, ref, fail, tmp_path, monkeypatch, installer):
         "git",
         "clone",
         f"https://github.com/{repo}",
+        "--depth=1",
         "--branch",
         ref,
         "--recurse-submodules",
