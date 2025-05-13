@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import sys
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Literal
@@ -117,7 +118,14 @@ def compare(
 
 def main(sys_args: Sequence[str] | None = None, /) -> None:
     """Parse the command line arguments and call compare()."""
-    parser = argparse.ArgumentParser(prog=None if sys_args is None else "check-sdist")
+    argopts = (
+        {} if sys.version_info < (3, 14) else {"color": True, "suggest_on_error": True}
+    )
+    parser = argparse.ArgumentParser(
+        prog=None if sys_args is None else "check-sdist",
+        allow_abbrev=False,
+        **argopts,  # type: ignore[arg-type]
+    )
     parser.add_argument(
         "--version", action="version", version=f"%(prog)s {__version__}"
     )
