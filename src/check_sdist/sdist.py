@@ -17,7 +17,7 @@ def get_uv() -> str | None:
     """
     try:
         # pylint: disable-next=import-outside-toplevel
-        import uv
+        import uv  # noqa: PLC0415
 
         return uv.find_uv_bin()
     except ModuleNotFoundError:
