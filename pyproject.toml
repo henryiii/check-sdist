@@ -54,7 +54,6 @@ check-sdist = "check_sdist.schema:get_schema"
 test = [
   "pytest >=7",
   "pytest-cov >=3",
-  "coverage[toml]",
   "pytest-xdist",
   "pyproject-hooks !=1.1.0",
   "validate-pyproject >=0.16",
@@ -74,7 +73,6 @@ addopts = ["-ra", "--showlocals", "--strict-markers", "--strict-config"]
 xfail_strict = true
 filterwarnings = [
   "error",
-  "ignore:sys.monitoring isn't available:coverage.exceptions.CoverageWarning",
 ]
 log_cli_level = "INFO"
 testpaths = [
@@ -84,6 +82,7 @@ testpaths = [
 
 [tool.coverage]
 run.source = ["check_sdist"]
+run.disable_warnings = ["no-sysmon"]
 report.exclude_also = [
     "return __all__",
 ]
