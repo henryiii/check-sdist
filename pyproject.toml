@@ -54,6 +54,7 @@ check-sdist = "check_sdist.schema:get_schema"
 test = [
   "pytest >=7",
   "pytest-cov >=3",
+  "coverage[toml]",
   "pytest-xdist",
   "pyproject-hooks !=1.1.0",
   "validate-pyproject >=0.16",
