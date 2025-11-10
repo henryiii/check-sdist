@@ -2,9 +2,8 @@ from __future__ import annotations
 
 import argparse
 import contextlib
-from collections.abc import Sequence
 from pathlib import Path
-from typing import Literal
+from typing import TYPE_CHECKING, Literal
 
 import pathspec
 
@@ -15,6 +14,9 @@ from .git import git_files
 from .inject import inject_junk_files
 from .resources import resources
 from .sdist import get_uv, sdist_files
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 
 def select_installer(

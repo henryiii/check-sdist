@@ -50,7 +50,7 @@ repos:
         additional_dependencies:
           - tomli
           - pathspec
-          - pytest
+          - pytest<9 # pytest 9 requires Python 3.10+
           - validate-pyproject
           - uv
 

@@ -6,7 +6,7 @@ from check_sdist import __version__
 from check_sdist.__main__ import main
 
 
-def test_version(capsys):
+def test_version(capsys: pytest.CaptureFixture[str]):
     with pytest.raises(SystemExit):
         main(["--version"])
 
