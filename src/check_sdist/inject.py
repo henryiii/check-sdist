@@ -2,10 +2,13 @@ from __future__ import annotations
 
 import contextlib
 import sys
-from collections.abc import Generator, Sequence
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from .resources import resources
+
+if TYPE_CHECKING:
+    from collections.abc import Generator, Sequence
+    from pathlib import Path
 
 __all__ = ["inject_files", "inject_junk_files"]
 

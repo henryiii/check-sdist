@@ -3,6 +3,7 @@ from __future__ import annotations
 import subprocess
 import sys
 from pathlib import Path
+from typing import Literal
 
 import pytest
 
@@ -28,7 +29,14 @@ with DIR.joinpath("downstream.toml").open("rb") as f:
 @pytest.mark.parametrize(
     ("repo", "ref", "fail"), [(x["repo"], x["ref"], x.get("fail", 0)) for x in packages]
 )
-def test_packages(repo, ref, fail, tmp_path, monkeypatch, installer):
+def test_packages(
+    repo: str,
+    ref: str,
+    fail: int,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    installer: Literal["uv", "pip"],
+):
     if repo.endswith("scikit-build") and sys.platform.startswith("win32"):
         pytest.skip(reason="Path too long on Windows (0.18)")
 
