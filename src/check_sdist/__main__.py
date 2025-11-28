@@ -87,7 +87,7 @@ def compare(
     if default_ignore:
         with resources.joinpath("default-ignore.txt").open("r", encoding="utf-8") as f:
             git_only_patterns.extend(f.read().splitlines())
-        sdist_only_patterns.extend("*.dist-info")
+        sdist_only_patterns.append("*.dist-info")
 
     sdist_spec = pathspec.GitIgnoreSpec.from_lines(sdist_only_patterns)
     git_spec = pathspec.GitIgnoreSpec.from_lines(git_only_patterns)
