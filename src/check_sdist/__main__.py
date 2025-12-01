@@ -88,6 +88,14 @@ def compare(
         with resources.joinpath("default-ignore.txt").open("r", encoding="utf-8") as f:
             git_only_patterns.extend(f.read().splitlines())
         sdist_only_patterns.append("*.dist-info")
+        build_backend = pyproject.get("build-system", {}).get(
+            "build-backend", "setuptools.build_meta.__legacy__"
+        )
+        if build_backend in {
+            "setuptools.build_meta",
+            "setuptools.build_meta.__legacy__",
+        }:
+            sdist_only_patterns.append("*.egg-info")
 
     sdist_spec = pathspec.GitIgnoreSpec.from_lines(sdist_only_patterns)
     git_spec = pathspec.GitIgnoreSpec.from_lines(git_only_patterns)

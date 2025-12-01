@@ -185,7 +185,7 @@ def test_maturin(backend: str):
 
             [tool.maturin]
             features = ["pyo3/extension-module"]
-            exclude = ["ignore*", "some-file", "**/notme.py"]
+            exclude = ["ignore*", "some-file", "**/notme.py", "Cargo.lock"]
 
             [tool.check-sdist]
             build-backend = "{backend}"
