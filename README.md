@@ -43,6 +43,7 @@ If you need the latest development version:
 
 ```console
 $ pipx run --spec git+https://github.com/henryiii/check-sdist check-sdist
+$ uvx --from git+https://github.com/henryiii/check-sdist check-sdist
 ```
 
 ### Pre-commit integration
@@ -52,7 +53,7 @@ To use the [pre-commit](https://pre-commit.com) integration, put this in your
 
 ```yaml
 - repo: https://github.com/henryiii/check-sdist
-  rev: v1.3.0
+  rev: v1.3.1
   hooks:
     - id: check-sdist
       args: [--inject-junk]
@@ -62,14 +63,15 @@ To use the [pre-commit](https://pre-commit.com) integration, put this in your
 This requires your build dependencies, but in doing so, it can cache the
 environment, making it quite fast. The installation is handled by pre-commit;
 see [`pre-commit-uv`](https://pypi.org/p/pre-commit-uv) if you want to try to
-optimize the initial setup. If uv is present (including in your
-`additional_dependencies`), the build will be slightly faster, as uv is used to
-do the build. If you don't mind slower runs and don't want to require a build
-dependency listing:
+optimize the initial setup. You can also use [`prek`](https://prek.j178.dev),
+which is a Rust pre-commit compatible runner that uses uv. If uv is present
+(including in your `additional_dependencies`), the build will be slightly
+faster, as uv is used to do the build. If you don't mind slower runs and don't
+want to require a build dependency listing:
 
 ```yaml
 - repo: https://github.com/henryiii/check-sdist
-  rev: v1.3.0
+  rev: v1.3.1
   hooks:
     - id: check-sdist-isolated
       args: [--inject-junk]
