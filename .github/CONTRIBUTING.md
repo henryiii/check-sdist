@@ -1,7 +1,7 @@
-See the [Scikit-HEP Developer introduction][skhep-dev-intro] for a detailed
-description of best practices for developing Scikit-HEP packages.
+See the [Scientific-Python Development Guide][skhep-dev-intro] for a detailed
+description of best practices for developing packages.
 
-[skhep-dev-intro]: https://scikit-hep.org/developer/intro
+[skhep-dev-intro]: https://learn.scientific-python.org/development/guides
 
 # Quick development
 
@@ -47,16 +47,16 @@ py -m install -v -e .[dev]
 
 # Post setup
 
-You should prepare pre-commit, which will help you by checking that commits pass
+You should prepare prek, which will help you by checking that commits pass
 required checks:
 
 ```bash
-pip install pre-commit # or brew install pre-commit on macOS
-pre-commit install # Will install a pre-commit hook into the git repo
+pip install prek # or brew install prek on macOS
+prek install # Will install a pre-commit hook into the git repo
 ```
 
-You can also/alternatively run `pre-commit run` (changes only) or
-`pre-commit run --all-files` to check even without installing the hook.
+You can also/alternatively run `prek` (changes only) or `prek -a` to check even
+without installing the hook.
 
 # Testing
 
@@ -73,15 +73,3 @@ Use pytest-cov to generate coverage reports:
 ```bash
 pytest --cov=check-sdist
 ```
-
-# Pre-commit
-
-This project uses pre-commit for all style checking. While you can run it with
-nox, this is such an important tool that it deserves to be installed on its own.
-Install pre-commit and run:
-
-```bash
-pre-commit run -a
-```
-
-to check all files.
