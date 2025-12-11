@@ -83,5 +83,15 @@ def generate_schema(session: nox.Session) -> None:
     path.write_text(out)
 
 
+@nox.session(default=False)
+def bump(session: nox.Session) -> None:
+    """
+    Bump the version.
+    """
+
+    session.install("bump-my-version")
+    session.run("bump-my-version", *session.posargs)
+
+
 if __name__ == "__main__":
     nox.main()
