@@ -113,9 +113,9 @@ backends supported are `"flit_core.buildapi"`, `"hatchling.build"`,
 backend if `build-system.build-backend` is set to a known value.
 
 check-sdist will ignore `*.dist-info` in SDists, since those are generated. If
-the build backend is clearly setuptools, it will also ignore `*.egg-info`, as
-setuptools generates this. If you've wrapped your build backend, you'll need to
-add this to the `sdist-only` ignore list manually.
+the build backend is clearly setuptools, it will also ignore `*.egg-info` and
+`setup.cfg`, as setuptools can generate this. If you've wrapped your build
+backend, you'll need to add this to the `sdist-only` ignore list manually.
 
 ### See also
 

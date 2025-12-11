@@ -95,7 +95,7 @@ def compare(
             "setuptools.build_meta",
             "setuptools.build_meta.__legacy__",
         }:
-            sdist_only_patterns.append("*.egg-info")
+            sdist_only_patterns.extend(["*.egg-info", "setup.cfg"])
 
     sdist_spec = pathspec.GitIgnoreSpec.from_lines(sdist_only_patterns)
     git_spec = pathspec.GitIgnoreSpec.from_lines(git_only_patterns)
