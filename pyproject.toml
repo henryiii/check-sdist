@@ -137,6 +137,8 @@ messages_control.disable = [
 [tool.repo-review]
 ignore = ["PY004", "PC111", "RTD"]
 
+[tool.bumpversion]
+
 [[tool.bumpversion.files]]
 filename = "README.md"
 search = "v{current_version}"
