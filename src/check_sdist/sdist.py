@@ -109,7 +109,12 @@ def default_sdist_ignore(pyproject: Mapping[str, Any]) -> Iterator[str]:
 
     # [tool.pdm.version]
     # write_to = "_version.py"
-    pdm_version = pyproject.get("tool", {}).get("pdm", {}).get("version", {}).get("write_to", None)
+    pdm_version = (
+        pyproject.get("tool", {})
+        .get("pdm", {})
+        .get("version", {})
+        .get("write_to", None)
+    )
     if pdm_version is not None:
         yield pdm_version
 

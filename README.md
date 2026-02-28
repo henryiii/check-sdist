@@ -121,10 +121,11 @@ list manually.
 If `default-ignore` is on, a few common generated file settings will be read and
 included in `sdist-only`:
 
-* setuptools-scm version file (pyproject.toml only)
-* hatch-vcs version file (pyproject.toml only)
-* pdm-backend version file
-* scikit-build-core's `generate` feature
+- setuptools-scm version file (modern `version_file` in pyproject.toml only,
+  `write_to` is not supported)
+- hatch-vcs version file (pyproject.toml only)
+- pdm-backend version file
+- scikit-build-core's `generate` feature
 
 ### See also
 
