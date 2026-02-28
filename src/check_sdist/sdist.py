@@ -6,9 +6,12 @@ import sys
 import tarfile
 import tempfile
 from pathlib import Path
-from typing import Literal
+from typing import TYPE_CHECKING, Any, Literal
 
-__all__ = ["get_uv", "sdist_files"]
+if TYPE_CHECKING:
+    from collections.abc import Iterator, Mapping
+
+__all__ = ["default_sdist_ignore", "get_uv", "sdist_files"]
 
 
 def get_uv() -> str | None:
@@ -67,6 +70,20 @@ def sdist_files(
                 for t in tar.getmembers()
                 if t.isfile() or t.issym()
             )
+
+
+def default_sdist_ignore(pyproject: Mapping[str, Any]) -> Iterator[str]:
+    """Return the default ignore patterns for SDists."""
+    yield "*.dist-info"
+    build_backend = pyproject.get("build-system", {}).get(
+        "build-backend", "setuptools.build_meta.__legacy__"
+    )
+    if build_backend in {
+        "setuptools.build_meta",
+        "setuptools.build_meta.__legacy__",
+    }:
+        yield "*.egg-info"
+        yield "setup.cfg"
 
 
 if __name__ == "__main__":
