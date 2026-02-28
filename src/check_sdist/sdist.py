@@ -107,6 +107,12 @@ def default_sdist_ignore(pyproject: Mapping[str, Any]) -> Iterator[str]:
     if hatch_vcs is not None:
         yield hatch_vcs
 
+    # [tool.pdm.version]
+    # write_to = "_version.py"
+    pdm_version = pyproject.get("tool", {}).get("pdm", {}).get("version", {}).get("write_to", None)
+    if pdm_version is not None:
+        yield pdm_version
+
     # [[tool.scikit-build.generate]]
     # path = "_version.py"
     for skbg in pyproject.get("tool", {}).get("scikit-build", {}).get("generate", []):

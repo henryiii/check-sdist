@@ -113,9 +113,18 @@ backends supported are `"flit_core.buildapi"`, `"hatchling.build"`,
 backend if `build-system.build-backend` is set to a known value.
 
 check-sdist will ignore `*.dist-info` in SDists, since those are generated. If
-the build backend is clearly setuptools, it will also ignore `*.egg-info` and
-`setup.cfg`, as setuptools can generate this. If you've wrapped your build
-backend, you'll need to add this to the `sdist-only` ignore list manually.
+the build backend is clearly setuptools and `default-ignore` is on, it will also
+ignore `*.egg-info` and `setup.cfg`, as setuptools can generate this. If you've
+wrapped your build backend, you'll need to add this to the `sdist-only` ignore
+list manually.
+
+If `default-ignore` is on, a few common generated file settings will be read and
+included in `sdist-only`:
+
+* setuptools-scm version file (pyproject.toml only)
+* hatch-vcs version file (pyproject.toml only)
+* pdm-backend version file
+* scikit-build-core's `generate` feature
 
 ### See also
 

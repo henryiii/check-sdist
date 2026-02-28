@@ -28,6 +28,18 @@ def test_default_sdist_ignore_hatch_vcs_version_file() -> None:
     assert "src/example/_version.py" in ignore
 
 
+def test_default_sdist_ignore_pdm_version_write_to() -> None:
+    pyproject_str = """
+    [tool.pdm.version]
+    write_to = "foo/_version.py"
+    """
+    pyproject = tomllib.loads(pyproject_str)
+
+    ignore = set(default_sdist_ignore(pyproject))
+
+    assert "foo/_version.py" in ignore
+
+
 def test_default_sdist_ignore_scikit_build_generate_paths() -> None:
     pyproject_str = """
     [[tool.scikit-build.generate]]
