@@ -13,7 +13,7 @@ from .backends import backend_ignored_patterns
 from .git import git_files
 from .inject import inject_junk_files
 from .resources import resources
-from .sdist import get_uv, sdist_files
+from .sdist import default_sdist_ignore, get_uv, sdist_files
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -64,8 +64,8 @@ def compare(
         pyproject = tomllib.load(f)
         config = pyproject.get("tool", {}).get("check-sdist", {})
 
-    sdist_only_patterns = config.get("sdist-only", [])
-    git_only_patterns = config.get("git-only", [])
+    sdist_only_patterns = set(config.get("sdist-only", []))
+    git_only_patterns = set(config.get("git-only", []))
     default_ignore = config.get("default-ignore", True)
     recurse_submodules = config.get("recurse-submodules", True)
     mode = config.get("mode", "git")
@@ -86,16 +86,8 @@ def compare(
 
     if default_ignore:
         with resources.joinpath("default-ignore.txt").open("r", encoding="utf-8") as f:
-            git_only_patterns.extend(f.read().splitlines())
-        sdist_only_patterns.append("*.dist-info")
-        build_backend = pyproject.get("build-system", {}).get(
-            "build-backend", "setuptools.build_meta.__legacy__"
-        )
-        if build_backend in {
-            "setuptools.build_meta",
-            "setuptools.build_meta.__legacy__",
-        }:
-            sdist_only_patterns.extend(["*.egg-info", "setup.cfg"])
+            git_only_patterns.update(f.read().splitlines())
+        sdist_only_patterns.update(default_sdist_ignore(pyproject))
 
     sdist_spec = pathspec.GitIgnoreSpec.from_lines(sdist_only_patterns)
     git_spec = pathspec.GitIgnoreSpec.from_lines(git_only_patterns)
