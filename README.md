@@ -136,7 +136,7 @@ included in `sdist-only`:
   Guidelines on which this package was designed.
 
 <!-- prettier-ignore-start -->
-[actions-badge]:            https://github.com/henryiii/check-sdist/workflows/CI/badge.svg
+[actions-badge]:            https://github.com/henryiii/check-sdist/actions/workflows/ci.yml/badge.svg
 [actions-link]:             https://github.com/henryiii/check-sdist/actions
 [pypi-link]:                https://pypi.org/project/check-sdist/
 [pypi-platforms]:           https://img.shields.io/pypi/pyversions/check-sdist
