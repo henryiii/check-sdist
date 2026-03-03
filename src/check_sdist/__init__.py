@@ -6,6 +6,6 @@ check-sdist: Check the contents of an SDist vs. git
 
 from __future__ import annotations
 
-__version__ = "1.3.2"
+__version__ = "1.4.0"
 
 __all__ = ["__version__"]
