@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import inspect
 import os
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -11,6 +12,15 @@ from check_sdist.__main__ import compare
 from check_sdist.inject import inject_junk_files
 
 DIR = Path(__file__).parent
+
+
+@pytest.fixture
+def self_repo(tmp_path: Path) -> Path:
+    repo = tmp_path / "repo"
+    shutil.copytree(
+        DIR.parent, repo, ignore=shutil.ignore_patterns("*venv*", "*cache*", "dist")
+    )
+    return repo
 
 
 def get_all_files(path: Path) -> frozenset[str]:
@@ -25,11 +35,12 @@ def test_self_dir():
     assert start == end
 
 
-def test_self_dir_injected():
-    start = get_all_files(DIR.parent)
-    with inject_junk_files(DIR.parent):
-        assert compare(DIR.parent, isolated=True) == 0
-    end = get_all_files(DIR.parent)
+def test_self_dir_injected(self_repo: Path, monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.chdir(self_repo)
+    start = get_all_files(Path())
+    with inject_junk_files(Path()):
+        assert compare(Path(), isolated=True) == 0
+    end = get_all_files(Path())
     assert start == end
 
 
