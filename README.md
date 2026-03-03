@@ -53,7 +53,7 @@ To use the [pre-commit](https://pre-commit.com) integration, put this in your
 
 ```yaml
 - repo: https://github.com/henryiii/check-sdist
-  rev: v1.3.2
+  rev: v1.4.0
   hooks:
     - id: check-sdist
       args: [--inject-junk]
@@ -71,7 +71,7 @@ want to require a build dependency listing:
 
 ```yaml
 - repo: https://github.com/henryiii/check-sdist
-  rev: v1.3.2
+  rev: v1.4.0
   hooks:
     - id: check-sdist-isolated
       args: [--inject-junk]
@@ -136,7 +136,7 @@ included in `sdist-only`:
   Guidelines on which this package was designed.
 
 <!-- prettier-ignore-start -->
-[actions-badge]:            https://github.com/henryiii/check-sdist/workflows/CI/badge.svg
+[actions-badge]:            https://github.com/henryiii/check-sdist/actions/workflows/ci.yml/badge.svg
 [actions-link]:             https://github.com/henryiii/check-sdist/actions
 [pypi-link]:                https://pypi.org/project/check-sdist/
 [pypi-platforms]:           https://img.shields.io/pypi/pyversions/check-sdist
