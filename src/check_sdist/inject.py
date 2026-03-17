@@ -51,7 +51,7 @@ def inject_files(source_dir: Path, files: Sequence[str]) -> Generator[None, None
 def inject_junk_files(source_dir: Path) -> Generator[None, None, None]:
     """This context manager will inject common junk files into a directory, cleaned afterwards."""
     with resources.joinpath("junk-paths.txt").open("r", encoding="utf-8") as f:
-        junk_files = [ln.strip() for ln in f]
+        junk_files = [ln.strip() for ln in f if ln.strip() and not ln.startswith("#")]
     # Windows does not allow question marks in filenames
     if sys.platform.startswith("win"):
         junk_files = [ln for ln in junk_files if "?" not in ln]
