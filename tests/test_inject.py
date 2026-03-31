@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 from check_sdist.inject import inject_files, inject_junk_files
 
+TYPE_CHECKING = False
 if TYPE_CHECKING:
     from pathlib import Path
 

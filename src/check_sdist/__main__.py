@@ -1,20 +1,35 @@
 from __future__ import annotations
 
+__lazy_modules__ = [
+    "argparse",
+    "check_sdist._compat",
+    "check_sdist.backends",
+    "check_sdist.git",
+    "check_sdist.inject",
+    "check_sdist.resources",
+    "check_sdist.sdist",
+    "contextlib",
+    "pathlib",
+    "pathspec",
+    "typing",
+]
+
 import argparse
 import contextlib
 from pathlib import Path
-from typing import TYPE_CHECKING, Literal
+from typing import Literal
 
 import pathspec
 
-from . import __version__
-from ._compat import tomllib
-from .backends import backend_ignored_patterns
-from .git import git_files
-from .inject import inject_junk_files
-from .resources import resources
-from .sdist import default_sdist_ignore, get_uv, sdist_files
+from check_sdist import __version__
+from check_sdist._compat import tomllib
+from check_sdist.backends import backend_ignored_patterns
+from check_sdist.git import git_files
+from check_sdist.inject import inject_junk_files
+from check_sdist.resources import resources
+from check_sdist.sdist import default_sdist_ignore, get_uv, sdist_files
 
+TYPE_CHECKING = False
 if TYPE_CHECKING:
     from collections.abc import Sequence
 

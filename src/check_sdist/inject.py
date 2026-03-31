@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+__lazy_modules__ = [f"{__spec__.parent}.resources", "sys"]
+
 import contextlib
 import sys
-from typing import TYPE_CHECKING
 
 from .resources import resources
 
+TYPE_CHECKING = False
 if TYPE_CHECKING:
     from collections.abc import Generator, Sequence
     from pathlib import Path

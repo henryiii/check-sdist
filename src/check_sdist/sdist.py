@@ -1,13 +1,16 @@
 from __future__ import annotations
 
+__lazy_modules__ = ["shutil", "subprocess", "sys", "tarfile", "tempfile"]
+
 import shutil
 import subprocess
 import sys
 import tarfile
 import tempfile
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Literal
+from typing import Any, Literal
 
+TYPE_CHECKING = False
 if TYPE_CHECKING:
     from collections.abc import Iterator, Mapping
 
