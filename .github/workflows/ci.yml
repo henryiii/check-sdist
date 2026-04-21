@@ -66,6 +66,19 @@ jobs:
           plugin: pycoverage
           name: Python ${{ matrix.python-version}}
 
+  minimums:
+    name: Test minimum dependency versions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: astral-sh/setup-uv@v8.0.0
+
+      - name: Test with minimum versions
+        run: uvx nox -s minimums
+
   dist:
     name: Distribution build
     runs-on: ubuntu-latest
@@ -79,7 +92,7 @@ jobs:
 
   pass:
     if: always()
-    needs: [pylint, checks, dist]
+    needs: [pylint, checks, minimums, dist]
     runs-on: ubuntu-latest
     steps:
       - uses: re-actors/alls-green@release/v1
