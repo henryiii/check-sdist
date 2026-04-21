@@ -62,6 +62,16 @@ def coverage(session: nox.Session) -> None:
     tests(session)
 
 
+@nox.session(venv_backend="uv", default=False, python="3.9")
+def minimums(session: nox.Session) -> None:
+    """
+    Test the minimum versions of dependencies.
+    """
+    test_grp = nox.project.dependency_groups(PYPROJECT, "test")
+    session.install("-e.", *test_grp, "--resolution=lowest-direct")
+    session.run("pytest", "-nauto", *session.posargs, env={"COVERAGE_CORE": "sysmon"})
+
+
 @nox.session(default=False)
 def build(session: nox.Session) -> None:
     """

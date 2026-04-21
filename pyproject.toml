@@ -29,7 +29,7 @@ classifiers = [
 ]
 dependencies = [
   "build >=1.2",
-  "pathspec",
+  "pathspec >=0.10",
   "tomli; python_version<'3.11'",
 ]
 keywords = ["sdist", "packaging", "lint"]
@@ -54,8 +54,8 @@ check-sdist = "check_sdist.schema:get_schema"
 test = [
   "pytest >=7",
   "pytest-cov >=3",
-  "pytest-xdist",
-  "pyproject-hooks !=1.1.0",
+  "pytest-xdist >=3",
+  "pyproject-hooks >=1.0",
   "validate-pyproject >=0.16",
 ]
 dev = [{ include-group = "test" }]
