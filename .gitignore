@@ -155,4 +155,9 @@ Thumbs.db
 *~
 *.swp
 
+# AI files
+.claude/
+.cursor/
+.github/copilot
+
 uv.lock
