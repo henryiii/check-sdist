@@ -64,13 +64,14 @@ def sdist_files(
         (outpath,) = Path(outdir).glob("*.tar.gz")
 
         with tarfile.open(outpath) as tar:
-            prefixes = {n.split("/", maxsplit=1)[0] for n in tar.getnames()}
+            members = tar.getmembers()
+            prefixes = {m.name.split("/", maxsplit=1)[0] for m in members}
             if len(prefixes) != 1:
                 msg = f"malformed SDist, contains multiple packages {prefixes}"
                 raise AssertionError(msg)
             return frozenset(
                 t.name.split("/", maxsplit=1)[1]
-                for t in tar.getmembers()
+                for t in members
                 if t.isfile() or t.issym()
             )
 

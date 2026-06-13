@@ -99,6 +99,6 @@ def backend_ignored_patterns(
         exclude = pyproject.get("tool", {}).get("maturin", {}).get("exclude", [])
         return glob_filter(exclude, files)
     if backend != "auto":
-        msg = f"Unknown backend: {backend} - please add support in check_dist.backends"
+        msg = f"Unknown backend: {backend} - please add support in check_sdist.backends"
         raise ValueError(msg)
     return files
