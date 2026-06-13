@@ -18,7 +18,9 @@ DIR = Path(__file__).parent
 def self_repo(tmp_path: Path) -> Path:
     repo = tmp_path / "repo"
     shutil.copytree(
-        DIR.parent, repo, ignore=shutil.ignore_patterns("*venv*", "*cache*", "dist")
+        DIR.parent,
+        repo,
+        ignore=shutil.ignore_patterns("*venv*", "*cache*", "dist", ".nox"),
     )
     return repo
 
@@ -28,10 +30,13 @@ def get_all_files(path: Path) -> frozenset[str]:
         return frozenset(it.name for it in it if not it.name.startswith(".coverage"))
 
 
-def test_self_dir():
-    start = get_all_files(DIR.parent)
-    assert compare(DIR.parent, isolated=True) == 0
-    end = get_all_files(DIR.parent)
+def test_self_dir(self_repo: Path, monkeypatch: pytest.MonkeyPatch):
+    # Run against an isolated copy rather than the live repo, so concurrent
+    # tooling (pytest/mypy caches under -nauto) can't perturb the snapshot.
+    monkeypatch.chdir(self_repo)
+    start = get_all_files(Path())
+    assert compare(Path(), isolated=True) == 0
+    end = get_all_files(Path())
     assert start == end
 
 
