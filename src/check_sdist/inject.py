@@ -44,7 +44,7 @@ def inject_files(source_dir: Path, files: Sequence[str]) -> Generator[None, None
         for injected in injected_files:
             injected.unlink()
         for injected in sorted(
-            injected_directories, key=lambda x: len(str(x)), reverse=True
+            injected_directories, key=lambda x: len(x.parts), reverse=True
         ):
             injected.rmdir()
 

@@ -70,7 +70,7 @@ def compare(
     conditions are true.
     """
 
-    installer = select_installer(installer)
+    resolved_installer = select_installer(installer)
 
     pyproject = {}
     config = {}
@@ -86,7 +86,7 @@ def compare(
     mode = config.get("mode", "git")
     backend = config.get("build-backend", "auto")
 
-    sdist = sdist_files(source_dir, isolated=isolated, installer=installer) - {
+    sdist = sdist_files(source_dir, isolated=isolated, installer=resolved_installer) - {
         "PKG-INFO"
     }
     if mode == "git":
