@@ -41,17 +41,20 @@ properties:
       - git
       - all
   build-backend:
-    description: What to expect as build-backend, in order to look for exclude lists
+    description: What to expect as build-backend, in order to look for exclude lists. Any backend registered via the "check_sdist.backends" entry-point group is also accepted.
     default: auto
-    enum:
-      - auto
-      - none
-      - flit_core.buildapi
-      - hatchling.build
-      - scikit_build_core.build
-      - pdm.backend
-      - poetry.core.masonry.api
-      - maturin
+    anyOf:
+      - enum:
+          - auto
+          - none
+          - setuptools.build_meta
+          - flit_core.buildapi
+          - hatchling.build
+          - scikit_build_core.build
+          - pdm.backend
+          - poetry.core.masonry.api
+          - maturin
+      - type: string
 """
 
 schema = yaml.safe_load(starter)
