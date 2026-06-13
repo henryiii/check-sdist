@@ -176,14 +176,14 @@ def main(sys_args: Sequence[str] | None = None, /) -> None:
         if args.inject_junk:
             stack.enter_context(inject_junk_files(args.source_dir))
 
-    raise SystemExit(
-        compare(
-            args.source_dir,
-            isolated=not args.no_isolation,
-            verbose=args.verbose,
-            installer=args.installer,
+        raise SystemExit(
+            compare(
+                args.source_dir,
+                isolated=not args.no_isolation,
+                verbose=args.verbose,
+                installer=args.installer,
+            )
         )
-    )
 
 
 if __name__ == "__main__":
