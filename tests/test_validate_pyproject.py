@@ -32,6 +32,26 @@ def test_validate_pyproject_extra_key():
         validator(example)
 
 
+@pytest.mark.parametrize(
+    "backend",
+    [
+        "auto",
+        "none",
+        "flit_core.buildapi",
+        "hatchling.build",
+        "scikit_build_core.build",
+        "pdm.backend",
+        "poetry.core.masonry.api",
+        "maturin",
+    ],
+)
+def test_validate_pyproject_build_backend(backend: str):
+    """The schema must accept the build-backend strings the code matches on."""
+    example = {"tool": {"check-sdist": {"build-backend": backend}}}
+    validator = validate_pyproject.api.Validator()
+    assert validator(example) is not None
+
+
 def test_validate_pyproject_invalid_value():
     example = {
         "tool": {

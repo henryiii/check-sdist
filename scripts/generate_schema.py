@@ -49,7 +49,7 @@ properties:
       - flit_core.buildapi
       - hatchling.build
       - scikit_build_core.build
-      - pdm.backend.api
+      - pdm.backend
       - poetry.core.masonry.api
       - maturin
 """
