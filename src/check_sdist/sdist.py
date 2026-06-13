@@ -57,6 +57,7 @@ def sdist_files(
                 sys.executable,
                 "--out-dir",
                 outdir,
+                *([] if isolated else ["--no-build-isolation"]),
             ]
 
         subprocess.run(cmd, check=True, cwd=source_dir)
