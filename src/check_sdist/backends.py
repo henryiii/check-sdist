@@ -14,13 +14,17 @@ def __dir__() -> list[str]:
     return __all__
 
 
-def glob_filter(patterns: list[str], files: frozenset[str]) -> frozenset[str]:
+def glob_filter(
+    patterns: list[str], files: frozenset[str], source_dir: Path
+) -> frozenset[str]:
     """
-    Filter out files based on glob patterns.
+    Filter out files based on glob patterns, relative to source_dir.
     """
     new_files = set(files)
     for pattern in patterns:
-        results = {str(p.as_posix()) for p in Path().glob(pattern)}
+        results = {
+            p.relative_to(source_dir).as_posix() for p in Path(source_dir).glob(pattern)
+        }
         new_files -= results
     return frozenset(new_files)
 
@@ -34,7 +38,7 @@ def pathspec_filter(patterns: list[str], files: frozenset[str]) -> frozenset[str
 
 
 def backend_ignored_patterns(
-    backend: str, pyproject: dict[str, Any], files: frozenset[str]
+    backend: str, pyproject: dict[str, Any], files: frozenset[str], source_dir: Path
 ) -> frozenset[str]:
     """
     Return the ignored patterns for the given backend. If the generator is
@@ -61,7 +65,7 @@ def backend_ignored_patterns(
             .get("sdist", {})
             .get("exclude", [])
         )
-        return glob_filter(exclude, files)
+        return glob_filter(exclude, files, source_dir)
     if backend_resolved == "hatchling.build":
         exclude = (
             pyproject.get("tool", {})
@@ -87,17 +91,17 @@ def backend_ignored_patterns(
             .get("build", {})
             .get("excludes", [])
         )
-        return glob_filter(exclude, files)
+        return glob_filter(exclude, files, source_dir)
     if backend_resolved == "poetry.core.masonry.api":
         exclude = [
             x if isinstance(x, str) else x["path"]
             for x in pyproject.get("tool", {}).get("poetry", {}).get("exclude", [])
             if isinstance(x, str) or "sdist" in x.get("format", ["sdist"])
         ]
-        return glob_filter(exclude, files)
+        return glob_filter(exclude, files, source_dir)
     if backend_resolved == "maturin":
         exclude = pyproject.get("tool", {}).get("maturin", {}).get("exclude", [])
-        return glob_filter(exclude, files)
+        return glob_filter(exclude, files, source_dir)
     if backend != "auto":
         msg = f"Unknown backend: {backend} - please add support in check_dist.backends"
         raise ValueError(msg)

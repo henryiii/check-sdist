@@ -110,7 +110,7 @@ def compare(
     sdist_only = frozenset(p for p in sdist - git if not sdist_spec.match_file(p))
     git_only = frozenset(p for p in git - sdist if not git_spec.match_file(p))
 
-    git_only = backend_ignored_patterns(backend, pyproject, git_only)
+    git_only = backend_ignored_patterns(backend, pyproject, git_only, source_dir)
 
     if verbose:
         print("SDist contents:")
