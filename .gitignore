@@ -156,3 +156,7 @@ Thumbs.db
 *.swp
 
 uv.lock
+
+# Symlink to AGENTS.md
+CLAUDE.md
+.claude/
