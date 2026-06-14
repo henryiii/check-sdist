@@ -18,6 +18,8 @@ def __dir__() -> list[str]:
 
 
 class FlitBackend(BaseBackend):
+    """SDist knowledge for the flit-core build backend."""
+
     build_backends: ClassVar[tuple[str, ...]] = ("flit_core.buildapi",)
 
     def git_only_excludes(

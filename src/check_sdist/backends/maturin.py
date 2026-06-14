@@ -18,6 +18,8 @@ def __dir__() -> list[str]:
 
 
 class MaturinBackend(BaseBackend):
+    """SDist knowledge for the maturin build backend."""
+
     build_backends: ClassVar[tuple[str, ...]] = ("maturin",)
 
     def git_only_excludes(

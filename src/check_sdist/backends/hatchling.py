@@ -19,6 +19,8 @@ def __dir__() -> list[str]:
 
 
 class HatchlingBackend(BaseBackend):
+    """SDist knowledge for the hatchling build backend."""
+
     build_backends: ClassVar[tuple[str, ...]] = ("hatchling.build",)
 
     def git_only_excludes(

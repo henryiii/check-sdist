@@ -38,7 +38,7 @@ def load_backends() -> dict[str, Backend]:
     if sys.version_info >= (3, 10):
         eps = importlib.metadata.entry_points(group=GROUP)
     else:  # 3.9 has no group= kwarg; entry_points() returns a dict by group
-        eps = importlib.metadata.entry_points().get(GROUP, [])
+        eps = importlib.metadata.entry_points().get(GROUP, [])  # pylint: disable=no-member
     return {ep.name: ep.load()() for ep in eps}
 
 

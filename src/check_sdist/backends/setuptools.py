@@ -18,6 +18,8 @@ def __dir__() -> list[str]:
 
 
 class SetuptoolsBackend(BaseBackend):
+    """SDist knowledge for the setuptools build backend."""
+
     # git_only_excludes is inherited (no-op); this is the future home for
     # reading MANIFEST.in / setup.cfg sdist instructions.
     build_backends: ClassVar[tuple[str, ...]] = (

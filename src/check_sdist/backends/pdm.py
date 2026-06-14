@@ -19,6 +19,8 @@ def __dir__() -> list[str]:
 
 
 class PdmBackend(BaseBackend):
+    """SDist knowledge for the pdm-backend build backend."""
+
     build_backends: ClassVar[tuple[str, ...]] = ("pdm.backend",)
 
     def git_only_excludes(

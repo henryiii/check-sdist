@@ -18,6 +18,8 @@ def __dir__() -> list[str]:
 
 
 class PoetryBackend(BaseBackend):
+    """SDist knowledge for the poetry-core build backend."""
+
     build_backends: ClassVar[tuple[str, ...]] = ("poetry.core.masonry.api",)
 
     def git_only_excludes(

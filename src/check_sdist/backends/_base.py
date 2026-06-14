@@ -30,11 +30,9 @@ class Backend(Protocol):
         self, pyproject: dict[str, Any], files: frozenset[str], source_dir: Path
     ) -> frozenset[str]:
         """Drop files the backend intentionally keeps out of the SDist."""
-        ...
 
     def sdist_only_ignores(self, pyproject: dict[str, Any]) -> Iterator[str]:
         """Yield patterns expected in the SDist but absent from git."""
-        ...
 
 
 class BaseBackend:
@@ -42,12 +40,16 @@ class BaseBackend:
 
     build_backends: ClassVar[tuple[str, ...]] = ()
 
-    def git_only_excludes(
+    def git_only_excludes(  # pylint: disable=unused-argument
         self, pyproject: dict[str, Any], files: frozenset[str], source_dir: Path
     ) -> frozenset[str]:
+        """Keep every file (override to drop backend-specific excludes)."""
         return files
 
-    def sdist_only_ignores(self, pyproject: dict[str, Any]) -> Iterator[str]:
+    def sdist_only_ignores(  # pylint: disable=unused-argument
+        self, pyproject: dict[str, Any]
+    ) -> Iterator[str]:
+        """Yield nothing (override to add sdist-only patterns)."""
         yield from ()
 
 

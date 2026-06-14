@@ -19,6 +19,8 @@ def __dir__() -> list[str]:
 
 
 class ScikitBuildCoreBackend(BaseBackend):
+    """SDist knowledge for the scikit-build-core build backend."""
+
     build_backends: ClassVar[tuple[str, ...]] = ("scikit_build_core.build",)
 
     def git_only_excludes(
