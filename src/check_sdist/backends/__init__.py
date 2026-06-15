@@ -69,5 +69,5 @@ def resolve_backend(selector: str, pyproject: dict[str, Any]) -> Backend | None:
         if selector in backend.build_backends:
             return backend
 
-    msg = f"Unknown backend: {selector} - please add support in check_sdist.backends"
+    msg = f"Unknown backend: {selector} - request addition in check_sdist.backends or make a plugin"
     raise ValueError(msg)
