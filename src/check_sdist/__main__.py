@@ -23,11 +23,11 @@ import pathspec
 
 from check_sdist import __version__
 from check_sdist._compat import tomllib
-from check_sdist.backends import backend_ignored_patterns
+from check_sdist.backends import resolve_backend
 from check_sdist.git import git_files
 from check_sdist.inject import inject_junk_files
 from check_sdist.resources import resources
-from check_sdist.sdist import default_sdist_ignore, get_uv, sdist_files
+from check_sdist.sdist import get_uv, sdist_files
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
@@ -84,7 +84,7 @@ def compare(
     default_ignore = config.get("default-ignore", True)
     recurse_submodules = config.get("recurse-submodules", True)
     mode = config.get("mode", "git")
-    backend = config.get("build-backend", "auto")
+    backend = resolve_backend(config.get("build-backend", "auto"), pyproject)
 
     sdist = sdist_files(source_dir, isolated=isolated, installer=resolved_installer) - {
         "PKG-INFO"
@@ -102,7 +102,9 @@ def compare(
     if default_ignore:
         with resources.joinpath("default-ignore.txt").open("r", encoding="utf-8") as f:
             git_only_patterns.update(f.read().splitlines())
-        sdist_only_patterns.update(default_sdist_ignore(pyproject))
+        sdist_only_patterns.add("*.dist-info")
+        if backend is not None:
+            sdist_only_patterns.update(backend.sdist_only_ignores(pyproject))
 
     sdist_spec = pathspec.GitIgnoreSpec.from_lines(sdist_only_patterns)
     git_spec = pathspec.GitIgnoreSpec.from_lines(git_only_patterns)
@@ -110,7 +112,8 @@ def compare(
     sdist_only = frozenset(p for p in sdist - git if not sdist_spec.match_file(p))
     git_only = frozenset(p for p in git - sdist if not git_spec.match_file(p))
 
-    git_only = backend_ignored_patterns(backend, pyproject, git_only, source_dir)
+    if backend is not None:
+        git_only = backend.git_only_excludes(pyproject, git_only, source_dir)
 
     if verbose:
         print("SDist contents:")

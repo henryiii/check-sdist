@@ -51,6 +51,15 @@ check-sdist = "check_sdist.__main__:main"
 [project.entry-points."validate_pyproject.tool_schema"]
 check-sdist = "check_sdist.schema:get_schema"
 
+[project.entry-points."check_sdist.backends"]
+"setuptools.build_meta" = "check_sdist.backends.setuptools:SetuptoolsBackend"
+"flit_core.buildapi" = "check_sdist.backends.flit:FlitBackend"
+"hatchling.build" = "check_sdist.backends.hatchling:HatchlingBackend"
+"scikit_build_core.build" = "check_sdist.backends.scikit_build_core:ScikitBuildCoreBackend"
+"pdm.backend" = "check_sdist.backends.pdm:PdmBackend"
+"poetry.core.masonry.api" = "check_sdist.backends.poetry:PoetryBackend"
+"maturin" = "check_sdist.backends.maturin:MaturinBackend"
+
 [dependency-groups]
 test = [
   "pytest >=7",
@@ -119,7 +128,7 @@ isort.required-imports = ["from __future__ import annotations"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["ANN201", "INP"]
-"src/check_sdist/sdist.py" = ["ERA001"]
+"src/check_sdist/backends/*.py" = ["ERA001", "ARG002"]
 
 [tool.ruff.lint.flake8-tidy-imports.banned-api]
 "typing.TYPE_CHECKING".msg = "Use TYPE_CHECKING=False instead"
@@ -132,6 +141,7 @@ messages_control.disable = [
   "design",
   "fixme",
   "line-too-long",
+  "missing-function-docstring",
   "missing-module-docstring",
   "wrong-import-position",
   "invalid-name",
