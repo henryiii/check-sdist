@@ -1,14 +1,13 @@
 from __future__ import annotations
 
-__lazy_modules__ = [f"{__spec__.parent}._base", "typing"]
+__lazy_modules__ = ["typing"]
 
 from typing import Any, ClassVar
-
-from ._base import BaseBackend
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
     from collections.abc import Iterator
+    from pathlib import Path
 
 __all__ = ["SetuptoolsBackend"]
 
@@ -17,15 +16,19 @@ def __dir__() -> list[str]:
     return __all__
 
 
-class SetuptoolsBackend(BaseBackend):
+class SetuptoolsBackend:
     """SDist knowledge for the setuptools build backend."""
 
-    # git_only_excludes is inherited (no-op); this is the future home for
-    # reading MANIFEST.in / setup.cfg sdist instructions.
     build_backends: ClassVar[tuple[str, ...]] = (
         "setuptools.build_meta",
         "setuptools.build_meta.__legacy__",
     )
+
+    def git_only_excludes(  # pylint: disable=unused-argument
+        self, pyproject: dict[str, Any], files: frozenset[str], source_dir: Path
+    ) -> frozenset[str]:
+        # No excludes today; the future home for reading MANIFEST.in / setup.cfg.
+        return files
 
     def sdist_only_ignores(self, pyproject: dict[str, Any]) -> Iterator[str]:
         yield "*.egg-info"

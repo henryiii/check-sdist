@@ -4,10 +4,11 @@ __lazy_modules__ = [f"{__spec__.parent}._base", "pathlib", "typing"]
 
 from typing import Any, ClassVar
 
-from ._base import BaseBackend, glob_filter
+from ._base import glob_filter
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
+    from collections.abc import Iterator
     from pathlib import Path
 
 __all__ = ["FlitBackend"]
@@ -17,7 +18,7 @@ def __dir__() -> list[str]:
     return __all__
 
 
-class FlitBackend(BaseBackend):
+class FlitBackend:
     """SDist knowledge for the flit-core build backend."""
 
     build_backends: ClassVar[tuple[str, ...]] = ("flit_core.buildapi",)
@@ -32,3 +33,8 @@ class FlitBackend(BaseBackend):
             .get("exclude", [])
         )
         return glob_filter(exclude, files, source_dir)
+
+    def sdist_only_ignores(  # pylint: disable=unused-argument
+        self, pyproject: dict[str, Any]
+    ) -> Iterator[str]:
+        yield from ()

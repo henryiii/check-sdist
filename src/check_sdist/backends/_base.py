@@ -11,7 +11,7 @@ TYPE_CHECKING = False
 if TYPE_CHECKING:
     from collections.abc import Iterator
 
-__all__ = ["Backend", "BaseBackend", "glob_filter", "pathspec_filter"]
+__all__ = ["Backend", "glob_filter", "pathspec_filter"]
 
 
 def __dir__() -> list[str]:
@@ -20,7 +20,13 @@ def __dir__() -> list[str]:
 
 @runtime_checkable
 class Backend(Protocol):
-    """A build backend's knowledge of what belongs in its SDist."""
+    """A build backend's knowledge of what belongs in its SDist.
+
+    Backends are structural: a plugin just needs these attributes, it does not
+    need to import or subclass anything from check-sdist. A backend that has no
+    excludes returns ``files`` unchanged; one with no generated files yields
+    nothing.
+    """
 
     #: The build-system.build-backend strings this plugin claims, used for
     #: "auto" detection. A backend may claim several (e.g. setuptools).
@@ -33,24 +39,6 @@ class Backend(Protocol):
 
     def sdist_only_ignores(self, pyproject: dict[str, Any]) -> Iterator[str]:
         """Yield patterns expected in the SDist but absent from git."""
-
-
-class BaseBackend:
-    """Convenience parent: no excludes and no sdist-only ignores."""
-
-    build_backends: ClassVar[tuple[str, ...]] = ()
-
-    def git_only_excludes(  # pylint: disable=unused-argument
-        self, pyproject: dict[str, Any], files: frozenset[str], source_dir: Path
-    ) -> frozenset[str]:
-        """Keep every file (override to drop backend-specific excludes)."""
-        return files
-
-    def sdist_only_ignores(  # pylint: disable=unused-argument
-        self, pyproject: dict[str, Any]
-    ) -> Iterator[str]:
-        """Yield nothing (override to add sdist-only patterns)."""
-        yield from ()
 
 
 def glob_filter(

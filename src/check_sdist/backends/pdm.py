@@ -4,7 +4,7 @@ __lazy_modules__ = [f"{__spec__.parent}._base", "pathlib", "typing"]
 
 from typing import Any, ClassVar
 
-from ._base import BaseBackend, glob_filter
+from ._base import glob_filter
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
@@ -18,7 +18,7 @@ def __dir__() -> list[str]:
     return __all__
 
 
-class PdmBackend(BaseBackend):
+class PdmBackend:
     """SDist knowledge for the pdm-backend build backend."""
 
     build_backends: ClassVar[tuple[str, ...]] = ("pdm.backend",)

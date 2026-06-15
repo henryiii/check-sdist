@@ -4,10 +4,11 @@ __lazy_modules__ = [f"{__spec__.parent}._base", "pathlib", "typing"]
 
 from typing import Any, ClassVar
 
-from ._base import BaseBackend, glob_filter
+from ._base import glob_filter
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
+    from collections.abc import Iterator
     from pathlib import Path
 
 __all__ = ["PoetryBackend"]
@@ -17,7 +18,7 @@ def __dir__() -> list[str]:
     return __all__
 
 
-class PoetryBackend(BaseBackend):
+class PoetryBackend:
     """SDist knowledge for the poetry-core build backend."""
 
     build_backends: ClassVar[tuple[str, ...]] = ("poetry.core.masonry.api",)
@@ -31,3 +32,8 @@ class PoetryBackend(BaseBackend):
             if isinstance(x, str) or "sdist" in x.get("format", ["sdist"])
         ]
         return glob_filter(exclude, files, source_dir)
+
+    def sdist_only_ignores(  # pylint: disable=unused-argument
+        self, pyproject: dict[str, Any]
+    ) -> Iterator[str]:
+        yield from ()

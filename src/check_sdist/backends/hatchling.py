@@ -4,7 +4,7 @@ __lazy_modules__ = [f"{__spec__.parent}._base", "pathlib", "typing"]
 
 from typing import Any, ClassVar
 
-from ._base import BaseBackend, pathspec_filter
+from ._base import pathspec_filter
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
@@ -18,7 +18,7 @@ def __dir__() -> list[str]:
     return __all__
 
 
-class HatchlingBackend(BaseBackend):
+class HatchlingBackend:
     """SDist knowledge for the hatchling build backend."""
 
     build_backends: ClassVar[tuple[str, ...]] = ("hatchling.build",)
