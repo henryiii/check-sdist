@@ -141,6 +141,7 @@ messages_control.disable = [
   "design",
   "fixme",
   "line-too-long",
+  "missing-function-docstring",
   "missing-module-docstring",
   "wrong-import-position",
   "invalid-name",

@@ -23,7 +23,7 @@ class HatchlingBackend:
 
     build_backends: ClassVar[tuple[str, ...]] = ("hatchling.build",)
 
-    def git_only_excludes(
+    def git_only_excludes(  # pylint: disable=unused-argument
         self, pyproject: dict[str, Any], files: frozenset[str], source_dir: Path
     ) -> frozenset[str]:
         exclude = (
