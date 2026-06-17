@@ -111,10 +111,8 @@ you use this.
 
 You can tell check-sdist to look for exclude lists for a specific build backend
 with `build-backend`, or `"none"` to only use its own exclude list. Build
-backends supported are `"setuptools.build_meta"`, `"flit_core.buildapi"`,
-`"hatchling.build"`, `"scikit_build_core.build"`, `"pdm.backend"`, `"maturin"`,
-and `"poetry.core.masonry.api"`. The default, `"auto"`, will try to detect the
-build backend if `build-system.build-backend` is set to a known value.
+backends supported are listed below. The default, `"auto"`, will try to detect
+the build backend if `build-system.build-backend` is set to a known value.
 
 check-sdist will ignore `*.dist-info` in SDists, since those are generated. If
 the build backend is clearly setuptools and `default-ignore` is on, it will also
