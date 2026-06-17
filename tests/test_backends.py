@@ -5,6 +5,7 @@ import pytest
 from check_sdist._compat import tomllib
 from check_sdist.backends import load_backends, resolve_backend
 from check_sdist.backends.hatchling import HatchlingBackend
+from check_sdist.backends.none import NoneBackend
 from check_sdist.backends.pdm import PdmBackend
 from check_sdist.backends.scikit_build_core import ScikitBuildCoreBackend
 from check_sdist.backends.setuptools import SetuptoolsBackend
@@ -41,7 +42,6 @@ def test_glob_backend_excludes_relative_to_source_dir(
     files = frozenset({"junk.txt", "keep.py"})
 
     backend = resolve_backend("auto", pyproject)
-    assert backend is not None
     result = backend.git_only_excludes(pyproject, files, source_dir)
 
     assert "junk.txt" not in result
@@ -51,6 +51,7 @@ def test_glob_backend_excludes_relative_to_source_dir(
 def test_load_backends_contains_builtins() -> None:
     names = set(load_backends())
     assert {
+        "none",
         "setuptools.build_meta",
         "flit_core.buildapi",
         "hatchling.build",
@@ -74,13 +75,13 @@ def test_resolve_setuptools_aliases(build_backend: str) -> None:
     assert isinstance(resolve_backend("auto", pyproject), SetuptoolsBackend)
 
 
-def test_resolve_none_returns_none() -> None:
-    assert resolve_backend("none", {}) is None
+def test_resolve_none_returns_none_backend() -> None:
+    assert isinstance(resolve_backend("none", {}), NoneBackend)
 
 
-def test_resolve_auto_unknown_returns_none() -> None:
+def test_resolve_auto_unknown_falls_back_to_none() -> None:
     pyproject = {"build-system": {"build-backend": "mystery.backend"}}
-    assert resolve_backend("auto", pyproject) is None
+    assert isinstance(resolve_backend("auto", pyproject), NoneBackend)
 
 
 def test_resolve_unknown_explicit_raises() -> None:

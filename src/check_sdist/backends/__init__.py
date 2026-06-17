@@ -41,17 +41,14 @@ def load_backends() -> dict[str, Backend]:
     return {ep.name: ep.load()() for ep in eps}
 
 
-def resolve_backend(selector: str, pyproject: dict[str, Any]) -> Backend | None:
+def resolve_backend(selector: str, pyproject: dict[str, Any]) -> Backend:
     """Resolve the check-sdist ``build-backend`` selector to a Backend.
 
-    ``"none"`` returns None (skip backend logic). ``"auto"`` matches the
-    project's ``build-system.build-backend`` and returns None if unrecognized.
-    Any other value selects a registered backend by name (or declared alias),
-    raising ValueError if unknown.
+    ``"none"`` selects the no-op default backend (no backend-specific logic).
+    ``"auto"`` matches the project's ``build-system.build-backend``, falling
+    back to ``"none"`` if unrecognized. Any other value selects a registered
+    backend by name (or declared alias), raising ValueError if unknown.
     """
-    if selector == "none":
-        return None
-
     backends = load_backends()
 
     if selector == "auto":
@@ -61,7 +58,7 @@ def resolve_backend(selector: str, pyproject: dict[str, Any]) -> Backend | None:
         for backend in backends.values():
             if build_backend in backend.build_backends:
                 return backend
-        return None
+        return backends["none"]
 
     if selector in backends:
         return backends[selector]

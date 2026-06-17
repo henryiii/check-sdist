@@ -52,6 +52,7 @@ check-sdist = "check_sdist.__main__:main"
 check-sdist = "check_sdist.schema:get_schema"
 
 [project.entry-points."check_sdist.backends"]
+"none" = "check_sdist.backends.none:NoneBackend"
 "setuptools.build_meta" = "check_sdist.backends.setuptools:SetuptoolsBackend"
 "flit_core.buildapi" = "check_sdist.backends.flit:FlitBackend"
 "hatchling.build" = "check_sdist.backends.hatchling:HatchlingBackend"
