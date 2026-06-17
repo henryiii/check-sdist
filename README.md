@@ -134,10 +134,24 @@ included in `sdist-only`:
 ### Plugins
 
 Every build backend is a plugin registered under the `check_sdist.backends`
-entry-point group, keyed by its `build-system.build-backend` string. You can add
-support for another backend (or override a built-in one) by shipping a small
-class and registering it under that group. Once installed, `auto` detection will
-pick it up, and the `build-backend` config option will accept its name too.
+entry-point group, keyed by its `build-system.build-backend` string. The
+following backends ship with check-sdist:
+
+- `setuptools.build_meta` (setuptools)
+- `flit_core.buildapi` (flit-core)
+- `hatchling.build` (hatchling)
+- `scikit_build_core.build` (scikit-build-core)
+- `pdm.backend` (pdm-backend)
+- `poetry.core.masonry.api` (poetry-core)
+- `maturin` (maturin)
+
+You can add support for another backend (or override a built-in one) by shipping
+a small class and registering it under that group. Once installed, `auto`
+detection will pick it up, and the `build-backend` config option will accept its
+name too.
+
+<details>
+<summary>Writing a backend plugin</summary>
 
 A backend is structural: it just needs to match the `Backend` protocol, so it
 doesn't have to import or subclass anything from check-sdist. It must provide a
@@ -178,6 +192,8 @@ A backend with no git-only excludes returns `files` unchanged; one with no
 generated files yields nothing. check-sdist exports `glob_filter` and
 `pathspec_filter` helpers from `check_sdist.backends` for the two common
 filtering styles, but using them is optional.
+
+</details>
 
 ### See also
 
