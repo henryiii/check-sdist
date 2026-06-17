@@ -13,14 +13,22 @@ import importlib.metadata
 import sys
 from typing import Any
 
-from ._base import Backend, glob_filter, pathspec_filter
+from ._base import (
+    Backend,
+    SuggestingBackend,
+    glob_filter,
+    pathspec_filter,
+    vcs_suggestion,
+)
 
 __all__ = [
     "Backend",
+    "SuggestingBackend",
     "glob_filter",
     "load_backends",
     "pathspec_filter",
     "resolve_backend",
+    "vcs_suggestion",
 ]
 
 GROUP = "check_sdist.backends"

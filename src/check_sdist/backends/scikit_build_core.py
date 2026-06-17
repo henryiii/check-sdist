@@ -4,7 +4,7 @@ __lazy_modules__ = [f"{__spec__.parent}._base", "pathlib", "typing"]
 
 from typing import Any, ClassVar
 
-from ._base import pathspec_filter
+from ._base import pathspec_filter, vcs_suggestion
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
@@ -43,3 +43,11 @@ class ScikitBuildCoreBackend:
             path = entry.get("path", None)
             if path is not None:
                 yield path
+
+    def suggestion(  # pylint: disable=unused-argument
+        self,
+        pyproject: dict[str, Any],
+        sdist_only: frozenset[str],
+        git_only: frozenset[str],
+    ) -> str | None:
+        return vcs_suggestion("tool.scikit-build.sdist.exclude", sdist_only, git_only)

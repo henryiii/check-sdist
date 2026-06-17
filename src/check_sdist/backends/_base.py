@@ -11,7 +11,13 @@ TYPE_CHECKING = False
 if TYPE_CHECKING:
     from collections.abc import Iterator
 
-__all__ = ["Backend", "glob_filter", "pathspec_filter"]
+__all__ = [
+    "Backend",
+    "SuggestingBackend",
+    "glob_filter",
+    "pathspec_filter",
+    "vcs_suggestion",
+]
 
 
 def __dir__() -> list[str]:
@@ -41,6 +47,25 @@ class Backend(Protocol):
         """Yield patterns expected in the SDist but absent from git."""
 
 
+@runtime_checkable
+class SuggestingBackend(Protocol):
+    """Optional backend hook: advise the user how to resolve a mismatch.
+
+    A backend may implement ``suggestion`` in addition to the :class:`Backend`
+    protocol. When the SDist and git disagree, check-sdist calls it with the
+    unresolved ``sdist_only`` and ``git_only`` sets and prints whatever text it
+    returns. Return ``None`` (or an empty string) to stay silent.
+    """
+
+    def suggestion(
+        self,
+        pyproject: dict[str, Any],
+        sdist_only: frozenset[str],
+        git_only: frozenset[str],
+    ) -> str | None:
+        """Return advice for resolving the mismatch, or None for no advice."""
+
+
 def glob_filter(
     patterns: list[str], files: frozenset[str], source_dir: Path
 ) -> frozenset[str]:
@@ -58,3 +83,27 @@ def pathspec_filter(patterns: list[str], files: frozenset[str]) -> frozenset[str
     """Filter out files based on gitignore-style patterns."""
     spec = pathspec.GitIgnoreSpec.from_lines(patterns)
     return frozenset(p for p in files if not spec.match_file(p))
+
+
+def vcs_suggestion(
+    exclude_table: str, sdist_only: frozenset[str], git_only: frozenset[str]
+) -> str | None:
+    """Build a suggestion for backends that ship all VCS-tracked files.
+
+    ``exclude_table`` names the pyproject table users edit to drop files (e.g.
+    ``"tool.hatch.build.targets.sdist.exclude"``). Returns None if there is
+    nothing to suggest.
+    """
+    lines = []
+    if git_only:
+        lines.append(
+            "  Files tracked by git are missing from the SDist. Something is "
+            f"removing them; check {exclude_table} and any VCS-ignore rules."
+        )
+    if sdist_only:
+        lines.append(
+            "  Files in the SDist are not tracked by git. Commit them, exclude "
+            f"them via {exclude_table}, or list them under [tool.check-sdist] "
+            "sdist-only."
+        )
+    return "\n".join(lines) or None
