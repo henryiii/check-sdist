@@ -64,8 +64,10 @@ Per-backend logic lives in the `backends/` package: one module per backend
 `sdist_only_ignores()`. Backends are registered under the `check_sdist.backends`
 entry-point group (keyed by build-backend string) and discovered via
 `backends/__init__.py::load_backends()`; `resolve_backend()` maps the
-`build-backend` config (`auto`/`none`/explicit) to a `Backend` or `None`. Users
-can register their own backends under the same entry-point group.
+`build-backend` config (`auto`/`none`/explicit) to a `Backend`, falling back to
+the no-op `NoneBackend` (`backends/none.py`) when `none` is selected or `auto`
+finds no match. Users can register their own backends under the same entry-point
+group.
 
 `compare()` returns a bitfield exit code: 1 = SDist has extra files, 2 = SDist
 is missing git files, 3 = both.

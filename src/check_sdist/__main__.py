@@ -103,8 +103,7 @@ def compare(
         with resources.joinpath("default-ignore.txt").open("r", encoding="utf-8") as f:
             git_only_patterns.update(f.read().splitlines())
         sdist_only_patterns.add("*.dist-info")
-        if backend is not None:
-            sdist_only_patterns.update(backend.sdist_only_ignores(pyproject))
+        sdist_only_patterns.update(backend.sdist_only_ignores(pyproject))
 
     sdist_spec = pathspec.GitIgnoreSpec.from_lines(sdist_only_patterns)
     git_spec = pathspec.GitIgnoreSpec.from_lines(git_only_patterns)
@@ -112,8 +111,7 @@ def compare(
     sdist_only = frozenset(p for p in sdist - git if not sdist_spec.match_file(p))
     git_only = frozenset(p for p in git - sdist if not git_spec.match_file(p))
 
-    if backend is not None:
-        git_only = backend.git_only_excludes(pyproject, git_only, source_dir)
+    git_only = backend.git_only_excludes(pyproject, git_only, source_dir)
 
     if verbose:
         print("SDist contents:")
