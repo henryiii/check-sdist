@@ -34,10 +34,14 @@ $ uvx check-sdist
 
 You can add `--no-isolation` to disable build isolation (faster, but must
 preinstall build dependencies), `--source-dir` to select a different source
-directory to check, and `--inject-junk` to temporarily inject some common junk
-files while running. You can select an installer for build to use with
-`--installer=`, choices are `uv`, `pip`, or `uv|pip`, which will use uv if
-available (the default).
+directory to check, `--inject-junk` to temporarily inject some common junk files
+while running, and `-v`/`--verbose` to also print the SDist contents. You can
+select an installer for build to use with `--installer=`, choices are `uv`,
+`pip`, or `uv|pip`, which will use uv if available (the default).
+
+check-sdist exits 0 if the SDist matches git. Otherwise it returns a bitfield:
+`1` if the SDist has files not tracked by git, `2` if it is missing files that
+are tracked by git, and `3` if both.
 
 If you need the latest development version:
 
@@ -106,18 +110,11 @@ system. Be prepared to ignore lots of things manually, like `*.pyc` files, if
 you use this.
 
 You can tell check-sdist to look for exclude lists for a specific build backend
-with `build-backend`, or `"none"` to only use it's own exclude list. Build
+with `build-backend`, or `"none"` to only use its own exclude list. Build
 backends supported are `"setuptools.build_meta"`, `"flit_core.buildapi"`,
 `"hatchling.build"`, `"scikit_build_core.build"`, `"pdm.backend"`, `"maturin"`,
 and `"poetry.core.masonry.api"`. The default, `"auto"`, will try to detect the
 build backend if `build-system.build-backend` is set to a known value.
-
-Each build backend is a plugin registered under the `check_sdist.backends`
-entry-point group, keyed by its `build-system.build-backend` string. You can add
-support for another backend by shipping a small class implementing the `Backend`
-protocol (`build_backends`, `git_only_excludes`, `sdist_only_ignores`) and
-registering it under that group; `build-backend` then accepts your backend's
-name too.
 
 check-sdist will ignore `*.dist-info` in SDists, since those are generated. If
 the build backend is clearly setuptools and `default-ignore` is on, it will also
@@ -133,6 +130,54 @@ included in `sdist-only`:
 - hatch-vcs version file (pyproject.toml only)
 - pdm-backend version file
 - scikit-build-core's `generate` feature
+
+### Plugins
+
+Every build backend is a plugin registered under the `check_sdist.backends`
+entry-point group, keyed by its `build-system.build-backend` string. You can add
+support for another backend (or override a built-in one) by shipping a small
+class and registering it under that group. Once installed, `auto` detection will
+pick it up, and the `build-backend` config option will accept its name too.
+
+A backend is structural: it just needs to match the `Backend` protocol, so it
+doesn't have to import or subclass anything from check-sdist. It must provide a
+`build_backends` attribute (the `build-system.build-backend` strings it claims,
+used for `auto` detection) and two methods:
+
+```python
+from __future__ import annotations
+
+from collections.abc import Iterator
+from pathlib import Path
+from typing import Any, ClassVar
+
+
+class MyBackend:
+    # build-system.build-backend strings this plugin claims (may be several)
+    build_backends: ClassVar[tuple[str, ...]] = ("my_backend.api",)
+
+    def git_only_excludes(
+        self, pyproject: dict[str, Any], files: frozenset[str], source_dir: Path
+    ) -> frozenset[str]:
+        """Drop files the backend intentionally keeps out of the SDist."""
+        return files
+
+    def sdist_only_ignores(self, pyproject: dict[str, Any]) -> Iterator[str]:
+        """Yield gitignore-style patterns expected in the SDist but absent from git."""
+        yield from ()
+```
+
+Register it from your package's `pyproject.toml`:
+
+```toml
+[project.entry-points."check_sdist.backends"]
+"my_backend.api" = "my_package._check_sdist:MyBackend"
+```
+
+A backend with no git-only excludes returns `files` unchanged; one with no
+generated files yields nothing. check-sdist exports `glob_filter` and
+`pathspec_filter` helpers from `check_sdist.backends` for the two common
+filtering styles, but using them is optional.
 
 ### See also
 
