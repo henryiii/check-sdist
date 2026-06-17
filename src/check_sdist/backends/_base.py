@@ -15,8 +15,8 @@ __all__ = [
     "Backend",
     "SuggestingBackend",
     "glob_filter",
+    "include_exclude_suggestion",
     "pathspec_filter",
-    "vcs_suggestion",
 ]
 
 
@@ -85,25 +85,30 @@ def pathspec_filter(patterns: list[str], files: frozenset[str]) -> frozenset[str
     return frozenset(p for p in files if not spec.match_file(p))
 
 
-def vcs_suggestion(
-    exclude_table: str, sdist_only: frozenset[str], git_only: frozenset[str]
+def include_exclude_suggestion(
+    include_setting: str,
+    exclude_setting: str,
+    sdist_only: frozenset[str],
+    git_only: frozenset[str],
 ) -> str | None:
-    """Build a suggestion for backends that ship all VCS-tracked files.
+    """Build a suggestion naming a backend's include/exclude settings.
 
-    ``exclude_table`` names the pyproject table users edit to drop files (e.g.
-    ``"tool.hatch.build.targets.sdist.exclude"``). Returns None if there is
+    ``include_setting`` and ``exclude_setting`` are the dotted pyproject keys a
+    user edits to add or drop files (e.g.
+    ``"tool.hatch.build.targets.sdist.include"``). Returns None if there is
     nothing to suggest.
     """
     lines = []
     if git_only:
         lines.append(
-            "  Files tracked by git are missing from the SDist. Something is "
-            f"removing them; check {exclude_table} and any VCS-ignore rules."
+            "  Files tracked by git are missing from the SDist. Add them to "
+            f"{include_setting}, or check that {exclude_setting} is not dropping "
+            "them."
         )
     if sdist_only:
         lines.append(
-            "  Files in the SDist are not tracked by git. Commit them, exclude "
-            f"them via {exclude_table}, or list them under [tool.check-sdist] "
+            "  Files in the SDist are not tracked by git. Commit them, drop them "
+            f"via {exclude_setting}, or list them under [tool.check-sdist] "
             "sdist-only."
         )
     return "\n".join(lines) or None

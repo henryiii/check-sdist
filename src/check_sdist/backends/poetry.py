@@ -4,7 +4,7 @@ __lazy_modules__ = [f"{__spec__.parent}._base", "pathlib", "typing"]
 
 from typing import Any, ClassVar
 
-from ._base import glob_filter, vcs_suggestion
+from ._base import glob_filter, include_exclude_suggestion
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
@@ -44,4 +44,9 @@ class PoetryBackend:
         sdist_only: frozenset[str],
         git_only: frozenset[str],
     ) -> str | None:
-        return vcs_suggestion("tool.poetry.exclude", sdist_only, git_only)
+        return include_exclude_suggestion(
+            "tool.poetry.include",
+            "tool.poetry.exclude",
+            sdist_only,
+            git_only,
+        )

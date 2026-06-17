@@ -17,18 +17,18 @@ from ._base import (
     Backend,
     SuggestingBackend,
     glob_filter,
+    include_exclude_suggestion,
     pathspec_filter,
-    vcs_suggestion,
 )
 
 __all__ = [
     "Backend",
     "SuggestingBackend",
     "glob_filter",
+    "include_exclude_suggestion",
     "load_backends",
     "pathspec_filter",
     "resolve_backend",
-    "vcs_suggestion",
 ]
 
 GROUP = "check_sdist.backends"

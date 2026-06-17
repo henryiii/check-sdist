@@ -4,7 +4,7 @@ __lazy_modules__ = [f"{__spec__.parent}._base", "pathlib", "typing"]
 
 from typing import Any, ClassVar
 
-from ._base import glob_filter, vcs_suggestion
+from ._base import glob_filter, include_exclude_suggestion
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
@@ -52,4 +52,9 @@ class PdmBackend:
         sdist_only: frozenset[str],
         git_only: frozenset[str],
     ) -> str | None:
-        return vcs_suggestion("tool.pdm.build.excludes", sdist_only, git_only)
+        return include_exclude_suggestion(
+            "tool.pdm.build.includes",
+            "tool.pdm.build.excludes",
+            sdist_only,
+            git_only,
+        )

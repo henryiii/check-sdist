@@ -207,10 +207,11 @@ can point users at the right config for that backend:
         ...
 ```
 
-For backends that ship every VCS-tracked file by default, the
-`vcs_suggestion(exclude_table, sdist_only, git_only)` helper from
-`check_sdist.backends` builds a standard message pointing at the backend's
-exclude table.
+The
+`include_exclude_suggestion(include_setting, exclude_setting, sdist_only, git_only)`
+helper from `check_sdist.backends` builds a standard message telling users which
+config keys to edit to add or drop files (e.g.
+`"tool.hatch.build.targets.sdist.include"` and `...exclude`).
 
 </details>
 

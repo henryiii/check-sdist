@@ -5,9 +5,9 @@ import pytest
 from check_sdist._compat import tomllib
 from check_sdist.backends import (
     SuggestingBackend,
+    include_exclude_suggestion,
     load_backends,
     resolve_backend,
-    vcs_suggestion,
 )
 from check_sdist.backends.hatchling import HatchlingBackend
 from check_sdist.backends.none import NoneBackend
@@ -154,17 +154,27 @@ def test_suggesting_backend_is_optional() -> None:
     assert isinstance(HatchlingBackend(), SuggestingBackend)
 
 
-def test_vcs_suggestion_empty_returns_none() -> None:
-    assert vcs_suggestion("tool.x.exclude", frozenset(), frozenset()) is None
+def test_include_exclude_suggestion_empty_returns_none() -> None:
+    assert (
+        include_exclude_suggestion(
+            "tool.x.include", "tool.x.exclude", frozenset(), frozenset()
+        )
+        is None
+    )
 
 
-def test_vcs_suggestion_mentions_exclude_table() -> None:
-    git_only = vcs_suggestion("tool.x.exclude", frozenset(), frozenset({"a.py"}))
+def test_include_exclude_suggestion_names_both_settings() -> None:
+    git_only = include_exclude_suggestion(
+        "tool.x.include", "tool.x.exclude", frozenset(), frozenset({"a.py"})
+    )
     assert git_only is not None
-    assert "tool.x.exclude" in git_only
     assert "missing from the SDist" in git_only
+    assert "tool.x.include" in git_only
+    assert "tool.x.exclude" in git_only
 
-    sdist_only = vcs_suggestion("tool.x.exclude", frozenset({"b.py"}), frozenset())
+    sdist_only = include_exclude_suggestion(
+        "tool.x.include", "tool.x.exclude", frozenset({"b.py"}), frozenset()
+    )
     assert sdist_only is not None
     assert "tool.x.exclude" in sdist_only
     assert "sdist-only" in sdist_only
@@ -183,3 +193,12 @@ def test_setuptools_suggestion() -> None:
     assert "sdist-only" in sdist_only
 
     assert backend.suggestion({}, frozenset(), frozenset()) is None
+
+
+def test_hatchling_suggestion_names_its_settings() -> None:
+    advice = HatchlingBackend().suggestion(
+        {}, frozenset({"junk.txt"}), frozenset({"data.txt"})
+    )
+    assert advice is not None
+    assert "tool.hatch.build.targets.sdist.include" in advice
+    assert "tool.hatch.build.targets.sdist.exclude" in advice
