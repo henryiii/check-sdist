@@ -195,10 +195,31 @@ def test_setuptools_suggestion() -> None:
     assert backend.suggestion({}, frozenset(), frozenset()) is None
 
 
-def test_hatchling_suggestion_names_its_settings() -> None:
-    advice = HatchlingBackend().suggestion(
-        {}, frozenset({"junk.txt"}), frozenset({"data.txt"})
-    )
+@pytest.mark.parametrize(
+    ("name", "include_setting", "exclude_setting"),
+    [
+        (
+            "hatchling.build",
+            "tool.hatch.build.targets.sdist.include",
+            "tool.hatch.build.targets.sdist.exclude",
+        ),
+        ("flit_core.buildapi", "tool.flit.sdist.include", "tool.flit.sdist.exclude"),
+        ("pdm.backend", "tool.pdm.build.includes", "tool.pdm.build.excludes"),
+        (
+            "scikit_build_core.build",
+            "tool.scikit-build.sdist.include",
+            "tool.scikit-build.sdist.exclude",
+        ),
+        ("poetry.core.masonry.api", "tool.poetry.include", "tool.poetry.exclude"),
+        ("maturin", "tool.maturin.include", "tool.maturin.exclude"),
+    ],
+)
+def test_vcs_backend_suggestion_names_its_settings(
+    name: str, include_setting: str, exclude_setting: str
+) -> None:
+    backend = resolve_backend(name, {})
+    assert isinstance(backend, SuggestingBackend)
+    advice = backend.suggestion({}, frozenset({"junk.txt"}), frozenset({"data.txt"}))
     assert advice is not None
-    assert "tool.hatch.build.targets.sdist.include" in advice
-    assert "tool.hatch.build.targets.sdist.exclude" in advice
+    assert include_setting in advice
+    assert exclude_setting in advice

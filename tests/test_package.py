@@ -49,6 +49,31 @@ def test_self_dir_injected(self_repo: Path, monkeypatch: pytest.MonkeyPatch):
     assert start == end
 
 
+def test_compare_prints_suggestion(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    # A mismatch under a suggesting backend (setuptools via "auto") prints
+    # advice. The file listings are stubbed so no real SDist is built.
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(
+        "check_sdist.__main__.sdist_files",
+        lambda *args, **kwargs: frozenset({"extra.txt"}),
+    )
+    monkeypatch.setattr(
+        "check_sdist.__main__.git_files",
+        lambda *args, **kwargs: frozenset({"missing.py"}),
+    )
+
+    # 3 == sdist-only (1) + git-only (2), i.e. both directions mismatch.
+    both_directions = 3
+    assert compare(tmp_path, isolated=True) == both_directions
+    out = capsys.readouterr().out
+    assert "Suggestion:" in out
+    assert "MANIFEST.in" in out
+
+
 @pytest.fixture
 def git_dir(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     monkeypatch.chdir(tmp_path)
