@@ -3,7 +3,12 @@ from __future__ import annotations
 import pytest
 
 from check_sdist._compat import tomllib
-from check_sdist.backends import load_backends, resolve_backend
+from check_sdist.backends import (
+    SuggestingBackend,
+    include_exclude_suggestion,
+    load_backends,
+    resolve_backend,
+)
 from check_sdist.backends.hatchling import HatchlingBackend
 from check_sdist.backends.none import NoneBackend
 from check_sdist.backends.pdm import PdmBackend
@@ -140,3 +145,81 @@ def test_scikit_build_generate_paths() -> None:
     ignore = set(ScikitBuildCoreBackend().sdist_only_ignores(pyproject))
     assert "src/example/_version.py" in ignore
     assert "python/pkg/version.py" in ignore
+
+
+def test_suggesting_backend_is_optional() -> None:
+    """The suggestion hook is opt-in: NoneBackend does not provide it."""
+    assert not isinstance(NoneBackend(), SuggestingBackend)
+    assert isinstance(SetuptoolsBackend(), SuggestingBackend)
+    assert isinstance(HatchlingBackend(), SuggestingBackend)
+
+
+def test_include_exclude_suggestion_empty_returns_none() -> None:
+    assert (
+        include_exclude_suggestion(
+            "tool.x.include", "tool.x.exclude", frozenset(), frozenset()
+        )
+        is None
+    )
+
+
+def test_include_exclude_suggestion_names_both_settings() -> None:
+    git_only = include_exclude_suggestion(
+        "tool.x.include", "tool.x.exclude", frozenset(), frozenset({"a.py"})
+    )
+    assert git_only is not None
+    assert "missing from the SDist" in git_only
+    assert "tool.x.include" in git_only
+    assert "tool.x.exclude" in git_only
+
+    sdist_only = include_exclude_suggestion(
+        "tool.x.include", "tool.x.exclude", frozenset({"b.py"}), frozenset()
+    )
+    assert sdist_only is not None
+    assert "tool.x.exclude" in sdist_only
+    assert "sdist-only" in sdist_only
+
+
+def test_setuptools_suggestion() -> None:
+    backend = SetuptoolsBackend()
+
+    git_only = backend.suggestion({}, frozenset(), frozenset({"data.txt"}))
+    assert git_only is not None
+    assert "MANIFEST.in" in git_only
+    assert "setuptools-scm" in git_only
+
+    sdist_only = backend.suggestion({}, frozenset({"junk.txt"}), frozenset())
+    assert sdist_only is not None
+    assert "sdist-only" in sdist_only
+
+    assert backend.suggestion({}, frozenset(), frozenset()) is None
+
+
+@pytest.mark.parametrize(
+    ("name", "include_setting", "exclude_setting"),
+    [
+        (
+            "hatchling.build",
+            "tool.hatch.build.targets.sdist.include",
+            "tool.hatch.build.targets.sdist.exclude",
+        ),
+        ("flit_core.buildapi", "tool.flit.sdist.include", "tool.flit.sdist.exclude"),
+        ("pdm.backend", "tool.pdm.build.includes", "tool.pdm.build.excludes"),
+        (
+            "scikit_build_core.build",
+            "tool.scikit-build.sdist.include",
+            "tool.scikit-build.sdist.exclude",
+        ),
+        ("poetry.core.masonry.api", "tool.poetry.include", "tool.poetry.exclude"),
+        ("maturin", "tool.maturin.include", "tool.maturin.exclude"),
+    ],
+)
+def test_vcs_backend_suggestion_names_its_settings(
+    name: str, include_setting: str, exclude_setting: str
+) -> None:
+    backend = resolve_backend(name, {})
+    assert isinstance(backend, SuggestingBackend)
+    advice = backend.suggestion({}, frozenset({"junk.txt"}), frozenset({"data.txt"}))
+    assert advice is not None
+    assert include_setting in advice
+    assert exclude_setting in advice

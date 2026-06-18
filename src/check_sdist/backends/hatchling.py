@@ -4,7 +4,7 @@ __lazy_modules__ = [f"{__spec__.parent}._base", "pathlib", "typing"]
 
 from typing import Any, ClassVar
 
-from ._base import pathspec_filter
+from ._base import include_exclude_suggestion, pathspec_filter
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
@@ -49,3 +49,16 @@ class HatchlingBackend:
         )
         if version_file is not None:
             yield version_file
+
+    def suggestion(  # pylint: disable=unused-argument
+        self,
+        pyproject: dict[str, Any],
+        sdist_only: frozenset[str],
+        git_only: frozenset[str],
+    ) -> str | None:
+        return include_exclude_suggestion(
+            "tool.hatch.build.targets.sdist.include",
+            "tool.hatch.build.targets.sdist.exclude",
+            sdist_only,
+            git_only,
+        )
