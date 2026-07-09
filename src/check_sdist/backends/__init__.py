@@ -13,11 +13,19 @@ import importlib.metadata
 import sys
 from typing import Any
 
-from ._base import Backend, glob_filter, pathspec_filter
+from ._base import (
+    Backend,
+    SuggestingBackend,
+    glob_filter,
+    include_exclude_suggestion,
+    pathspec_filter,
+)
 
 __all__ = [
     "Backend",
+    "SuggestingBackend",
     "glob_filter",
+    "include_exclude_suggestion",
     "load_backends",
     "pathspec_filter",
     "resolve_backend",

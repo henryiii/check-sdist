@@ -191,6 +191,28 @@ generated files yields nothing. check-sdist exports `glob_filter` and
 `pathspec_filter` helpers from `check_sdist.backends` for the two common
 filtering styles, but using them is optional.
 
+A backend may also implement an optional `suggestion` hook. When the SDist and
+git disagree, check-sdist passes it the unresolved `sdist_only` and `git_only`
+sets and prints whatever advice it returns (return `None` to stay silent), so it
+can point users at the right config for that backend:
+
+```python
+    def suggestion(
+        self,
+        pyproject: dict[str, Any],
+        sdist_only: frozenset[str],
+        git_only: frozenset[str],
+    ) -> str | None:
+        """Advise how to resolve the mismatch, or None for no advice."""
+        ...
+```
+
+The
+`include_exclude_suggestion(include_setting, exclude_setting, sdist_only, git_only)`
+helper from `check_sdist.backends` builds a standard message telling users which
+config keys to edit to add or drop files (e.g.
+`"tool.hatch.build.targets.sdist.include"` and `...exclude`).
+
 </details>
 
 ### See also

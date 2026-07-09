@@ -140,6 +140,7 @@ reports.output-format = "colorized"
 similarities.ignore-imports = "yes"
 messages_control.disable = [
   "design",
+  "duplicate-code",  # re-exported __all__ lists overlap by design
   "fixme",
   "line-too-long",
   "missing-function-docstring",
