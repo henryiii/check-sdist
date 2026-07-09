@@ -19,3 +19,7 @@ ehthumbs.db
 Thumbs.db
 editor.swp
 editor~
+# AI tool config dirs; .claude/ may contain credentials in settings.local.json
+.claude/
+.cursor/
+.github/copilot/
