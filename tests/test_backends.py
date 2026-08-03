@@ -126,7 +126,7 @@ def test_pdm_version_write_to() -> None:
     assert "foo/_version.py" in ignore
 
 
-def test_uv_pyproject_orig() -> None:
+def test_uv_pyproject_orig(tmp_path: Path) -> None:
     pyproject = tomllib.loads(
         """
         [build-system]
@@ -136,6 +136,9 @@ def test_uv_pyproject_orig() -> None:
     backend = resolve_backend("auto", pyproject)
     assert isinstance(backend, UvBackend)
     assert "pyproject.toml.orig" in set(backend.sdist_only_ignores(pyproject))
+
+    files = frozenset({"keep.py"})
+    assert backend.git_only_excludes(pyproject, files, tmp_path) == files
 
 
 def test_scikit_build_generate_paths() -> None:
