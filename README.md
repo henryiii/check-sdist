@@ -142,6 +142,7 @@ following backends ship with check-sdist:
 - `pdm.backend` (pdm-backend)
 - `poetry.core.masonry.api` (poetry-core)
 - `maturin` (maturin)
+- `uv_build` (uv)
 
 You can add support for another backend (or override a built-in one) by shipping
 a small class and registering it under that group. Once installed, `auto`

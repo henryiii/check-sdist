@@ -60,6 +60,7 @@ check-sdist = "check_sdist.schema:get_schema"
 "pdm.backend" = "check_sdist.backends.pdm:PdmBackend"
 "poetry.core.masonry.api" = "check_sdist.backends.poetry:PoetryBackend"
 "maturin" = "check_sdist.backends.maturin:MaturinBackend"
+"uv_build" = "check_sdist.backends.uv:UvBackend"
 
 [dependency-groups]
 test = [

@@ -9,6 +9,7 @@ from check_sdist.backends.none import NoneBackend
 from check_sdist.backends.pdm import PdmBackend
 from check_sdist.backends.scikit_build_core import ScikitBuildCoreBackend
 from check_sdist.backends.setuptools import SetuptoolsBackend
+from check_sdist.backends.uv import UvBackend
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
@@ -59,6 +60,7 @@ def test_load_backends_contains_builtins() -> None:
         "pdm.backend",
         "poetry.core.masonry.api",
         "maturin",
+        "uv_build",
     } <= names
 
 
@@ -122,6 +124,18 @@ def test_pdm_version_write_to() -> None:
     )
     ignore = set(PdmBackend().sdist_only_ignores(pyproject))
     assert "foo/_version.py" in ignore
+
+
+def test_uv_pyproject_orig() -> None:
+    pyproject = tomllib.loads(
+        """
+        [build-system]
+        build-backend = "uv_build"
+        """
+    )
+    backend = resolve_backend("auto", pyproject)
+    assert isinstance(backend, UvBackend)
+    assert "pyproject.toml.orig" in set(backend.sdist_only_ignores(pyproject))
 
 
 def test_scikit_build_generate_paths() -> None:
