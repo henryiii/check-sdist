@@ -124,6 +124,7 @@ ignore = [
   "S",      # Security related checks go too far (no assert, for example)
   "D",      # Too many docstring warnings
   "T20",    # Print is intentional here
+  "CPY",    # Copyright notice not required
 ]
 flake8-unused-arguments.ignore-variadic-names = true
 isort.required-imports = ["from __future__ import annotations"]
