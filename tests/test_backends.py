@@ -141,6 +141,56 @@ def test_uv_pyproject_orig(tmp_path: Path) -> None:
     assert backend.git_only_excludes(pyproject, files, tmp_path) == files
 
 
+def test_uv_source_exclude(tmp_path: Path) -> None:
+    pyproject = tomllib.loads(
+        """
+        [build-system]
+        build-backend = "uv_build"
+
+        [tool.uv.build-backend]
+        source-exclude = ["*.snap", "docs/build", "/dist"]
+        """
+    )
+    files = frozenset(
+        {
+            "keep.py",
+            "a.snap",
+            "nested/b.snap",
+            "docs/build/index.html",
+            "sub/docs/build/index.html",
+            "dist/pkg.tar.gz",
+            "sub/dist/pkg.tar.gz",
+            "snap/not-matched.py",
+        }
+    )
+    result = UvBackend().git_only_excludes(pyproject, files, tmp_path)
+    # Excludes are unanchored unless prefixed with "/", and a matching
+    # directory excludes its whole subtree.
+    assert result == frozenset(
+        {"keep.py", "sub/dist/pkg.tar.gz", "snap/not-matched.py"}
+    )
+
+
+def test_uv_default_excludes(tmp_path: Path) -> None:
+    pyproject = tomllib.loads(
+        """
+        [build-system]
+        build-backend = "uv_build"
+        """
+    )
+    files = frozenset({"keep.py", "a.pyc", "sub/__pycache__/b.pyc", "c.pyo"})
+    result = UvBackend().git_only_excludes(pyproject, files, tmp_path)
+    assert result == frozenset({"keep.py"})
+
+    no_defaults = tomllib.loads(
+        """
+        [tool.uv.build-backend]
+        default-excludes = false
+        """
+    )
+    assert UvBackend().git_only_excludes(no_defaults, files, tmp_path) == files
+
+
 def test_scikit_build_generate_paths() -> None:
     pyproject = tomllib.loads(
         """
