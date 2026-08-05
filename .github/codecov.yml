@@ -1,1 +1,7 @@
 comment: false
+
+codecov:
+  notify:
+    # Number of uploads from the `checks` matrix in ci.yml
+    after_n_builds: 8
+    wait_for_ci: true
