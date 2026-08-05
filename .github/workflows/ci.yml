@@ -54,7 +54,12 @@ jobs:
       - uses: astral-sh/setup-uv@v9.0.0
 
       - name: Test package
-        run: uvx nox -s coverage
+        # Run nox itself on a modern Python so its dependencies don't need to
+        # support the older test interpreters. nox spells PyPy without the dash.
+        shell: bash
+        run: uvx -p 3.13 nox -s coverage --force-python "${PY/#pypy-/pypy}"
+        env:
+          PY: ${{ matrix.python-version }}
 
       - name: Prepare environment for codecov
         run: uv tool install coverage
