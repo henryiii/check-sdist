@@ -23,7 +23,7 @@ import pathspec
 
 from check_sdist import __version__
 from check_sdist._compat import tomllib
-from check_sdist.backends import resolve_backend
+from check_sdist.backends import SuggestingBackend, resolve_backend
 from check_sdist.git import git_files
 from check_sdist.inject import inject_junk_files
 from check_sdist.resources import resources
@@ -127,6 +127,12 @@ def compare(
         print("Git only:")
         print(*(f"  {x}" for x in sorted(git_only)), sep="\n")
         print()
+        if isinstance(backend, SuggestingBackend):
+            advice = backend.suggestion(pyproject, sdist_only, git_only)
+            if advice:
+                print("Suggestion:")
+                print(advice)
+                print()
         return bool(sdist_only) + 2 * bool(git_only)
 
     print("SDist matches git")

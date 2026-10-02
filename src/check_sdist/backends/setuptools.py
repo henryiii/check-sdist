@@ -43,3 +43,25 @@ class SetuptoolsBackend:
         )
         if version_file is not None:
             yield version_file
+
+    def suggestion(  # pylint: disable=unused-argument
+        self,
+        pyproject: dict[str, Any],
+        sdist_only: frozenset[str],
+        git_only: frozenset[str],
+    ) -> str | None:
+        lines = []
+        if git_only:
+            lines.append(
+                "  Files tracked by git are missing from the SDist. setuptools "
+                "only ships what MANIFEST.in (and a few defaults) select; add "
+                "them with `include`/`graft`, or adopt setuptools-scm, which "
+                "ships every git-tracked file automatically."
+            )
+        if sdist_only:
+            lines.append(
+                "  Files in the SDist are not tracked by git. Commit them, drop "
+                "them with `prune`/`exclude` in MANIFEST.in, or list them under "
+                "[tool.check-sdist] sdist-only."
+            )
+        return "\n".join(lines) or None
