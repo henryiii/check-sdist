@@ -1,8 +1,11 @@
 from __future__ import annotations
 
 import io
+import shutil
 import subprocess
+import sys
 import tarfile
+import types
 from pathlib import Path
 
 import pytest
@@ -51,3 +54,18 @@ def test_uv_no_isolation_adds_no_build_isolation(
     sdist_mod.sdist_files(tmp_path, isolated=False, installer="uv")
 
     assert "--no-build-isolation" in fake_uv_build["cmd"]
+
+
+def test_get_uv_prefers_uv_module(monkeypatch: pytest.MonkeyPatch) -> None:
+    fake_uv = types.ModuleType("uv")
+    fake_uv.find_uv_bin = lambda: "/module/uv"  # type: ignore[attr-defined]
+    monkeypatch.setitem(sys.modules, "uv", fake_uv)
+
+    assert sdist_mod.get_uv() == "/module/uv"
+
+
+def test_get_uv_falls_back_to_path(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setitem(sys.modules, "uv", None)
+    monkeypatch.setattr(shutil, "which", lambda _: "/path/uv")
+
+    assert sdist_mod.get_uv() == "/path/uv"
