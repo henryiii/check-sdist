@@ -69,3 +69,22 @@ def test_get_uv_falls_back_to_path(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(shutil, "which", lambda _: "/path/uv")
 
     assert sdist_mod.get_uv() == "/path/uv"
+
+
+def test_malformed_sdist_multiple_prefixes(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    def fake_run(
+        cmd: list[str], **kwargs: object
+    ) -> subprocess.CompletedProcess[bytes]:
+        outdir = Path(cmd[cmd.index("--out-dir") + 1])
+        with tarfile.open(outdir / "pkg-1.0.tar.gz", "w:gz") as tar:
+            for name in ("pkg-1.0/a.py", "other-1.0/b.py"):
+                tar.addfile(tarfile.TarInfo(name), io.BytesIO(b""))
+        return subprocess.CompletedProcess(cmd, 0)
+
+    monkeypatch.setattr(sdist_mod, "get_uv", lambda: "/fake/uv")
+    monkeypatch.setattr(subprocess, "run", fake_run)
+
+    with pytest.raises(AssertionError, match="multiple packages"):
+        sdist_mod.sdist_files(tmp_path, isolated=True, installer="uv")
