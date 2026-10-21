@@ -14,7 +14,7 @@ This is a `nox` + `uv` project. Sessions are defined in `noxfile.py` (itself a
 - `uv run nox -s lint` — run prek (pre-commit) on all files
 - `uv run nox -s pylint` — run pylint against `src` (slower; installs the
   package)
-- `uv run nox -s minimums` — install lowest-direct dependency versions on 3.9
+- `uv run nox -s minimums` — install lowest-direct dependency versions on 3.10
   and test
 - `uv run nox -s coverage` — tests with coverage reporting
 - `uv run nox -s build` — build SDist + wheel
@@ -88,7 +88,7 @@ directories it created) afterward.
   changing imports.
 - Modules avoid `typing.TYPE_CHECKING`; instead they set `TYPE_CHECKING = False`
   locally (this is enforced by a ruff banned-api rule).
-- Python 3.9+ with `from __future__ import annotations` required in every file
+- Python 3.10+ with `from __future__ import annotations` required in every file
   (ruff isort enforces this). mypy runs in strict mode; `check_sdist.*`
   additionally requires fully typed defs.
 - ruff selects `ALL`; see `pyproject.toml` for the ignore list before

@@ -62,7 +62,7 @@ def coverage(session: nox.Session) -> None:
     tests(session)
 
 
-@nox.session(venv_backend="uv", default=False, python="3.9")
+@nox.session(venv_backend="uv", default=False, python="3.10")
 def minimums(session: nox.Session) -> None:
     """
     Test the minimum versions of dependencies.

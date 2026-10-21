@@ -4,13 +4,11 @@ __lazy_modules__ = [
     f"{__spec__.parent}._base",
     "functools",
     "importlib.metadata",
-    "sys",
     "typing",
 ]
 
 import functools
 import importlib.metadata
-import sys
 from typing import Any
 
 from ._base import Backend, glob_filter, pathspec_filter
@@ -34,10 +32,7 @@ def __dir__() -> list[str]:
 @functools.cache
 def load_backends() -> dict[str, Backend]:
     """Map entry-point name (a build-backend string) to a Backend instance."""
-    if sys.version_info >= (3, 10):
-        eps = importlib.metadata.entry_points(group=GROUP)
-    else:  # 3.9 has no group= kwarg; entry_points() returns a dict by group
-        eps = importlib.metadata.entry_points().get(GROUP, [])  # pylint: disable=no-member
+    eps = importlib.metadata.entry_points(group=GROUP)
     return {ep.name: ep.load()() for ep in eps}
 
 

@@ -10,7 +10,7 @@ authors = [
 ]
 description = "Check the contents of an SDist vs. git"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = "BSD-3-Clause"
 classifiers = [
   "Development Status :: 5 - Production/Stable",
@@ -19,7 +19,6 @@ classifiers = [
   "Programming Language :: Python",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
@@ -101,7 +100,7 @@ report.exclude_also = [
 
 [tool.mypy]
 files = ["src", "tests"]
-python_version = "3.9"
+python_version = "3.10"
 warn_unused_configs = true
 strict = true
 enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
@@ -137,7 +136,7 @@ isort.required-imports = ["from __future__ import annotations"]
 "typing.TYPE_CHECKING".msg = "Use TYPE_CHECKING=False instead"
 
 [tool.pylint]
-py-version = "3.9"
+py-version = "3.10"
 reports.output-format = "colorized"
 similarities.ignore-imports = "yes"
 messages_control.disable = [
